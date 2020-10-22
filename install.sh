@@ -44,7 +44,7 @@ sudo mkdir -p /opt/dotnet
 sudo tar zxf dotnet-sdk-3.1.102-linux-arm.tar.gz -C /opt/dotnet
 sudo tar zxf aspnetcore-runtime-3.1.2-linux-arm.tar.gz -C /opt/dotnet
 export DOTNET_ROOT=/opt/dotnet
-export PATH=/opt/dotnet
+export PATH=$PATH:/opt/dotnet
 sudo ln -s /opt/dotnet/dotnet /usr/local/bin
 
 echo "Prepare logfiles"

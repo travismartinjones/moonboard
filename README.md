@@ -35,7 +35,7 @@ Besides the tools, time and money (the clmbing holds are the most expensive comp
 * Flash a fresh Raspian buster 
 * run installer
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/8cH9azbsFifZ/moonboard/master/install.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/8cH9azbsFifZ/moonboard/feature/customization/install.sh)"
 ```
 
 * Test run 

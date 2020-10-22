@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from bibliopixel.colors import COLORS
-from bibliopixel import Matrix
+from bibliopixel import Strip
 from bibliopixel.drivers.PiWS281X import PiWS281X
 from bibliopixel.drivers.dummy_driver import DriverDummy
 from bibliopixel.drivers.SPI.WS2801 import  WS2801
@@ -32,6 +32,25 @@ LED_LAYOUT = {
     [1, 10, 13, 22, 25, 34, 37, 46, 49, 58, 61],
     [0, 11, 12, 23, 24, 35, 36, 47, 48, 59, 60]],
 
+'custom': [[ 17, 52, 87, 122, 157, 192, 227, 262, 297, 332, 367],
+       [ 18,  53,  88, 123, 158, 193, 228, 263, 298, 333, 368],
+       [ 19,  54,  89, 124, 159, 194, 229, 264, 299, 334, 369],
+       [ 20,  55,  90, 125, 160, 195, 230, 265, 300, 335, 370],
+       [ 21,  56,  91, 126, 161, 196, 231, 266, 301, 336, 371],
+       [ 22,  57,  92, 127, 162, 197, 232, 267, 302, 337, 372],
+       [ 23,  58,  93, 128, 163, 198, 233, 268, 303, 338, 373],
+       [ 24,  59,  94, 129, 164, 199, 234, 269, 304, 339, 374],
+       [ 25,  60,  95, 130, 165, 200, 235, 270, 305, 340, 375],
+       [ 26,  61,  96, 131, 166, 201, 236, 271, 306, 341, 376],
+       [ 27,  62,  97, 132, 167, 202, 237, 272, 307, 342, 377],
+       [ 28,  63,  98, 133, 168, 203, 238, 273, 308, 343, 378],
+       [ 29,  64,  99, 134, 169, 204, 239, 274, 309, 344, 379],
+       [ 30,  65, 100, 135, 170, 205, 240, 275, 310, 345, 380],
+       [ 31,  66, 101, 136, 171, 206, 241, 276, 311, 346, 371],
+       [ 32,  67, 102, 137, 172, 207, 242, 278, 312, 347, 382],
+       [ 33,  68, 103, 138, 173, 208, 243, 279, 313, 348, 383],
+       [ 34,  69, 104, 139, 174, 209, 244, 280, 314, 349, 384]],
+       
 'evo': [[ 17,  18,  53,  54,  89,  90, 125, 126, 161, 162, 197],
        [ 16,  19,  52,  55,  88,  91, 124, 127, 160, 163, 196],
        [ 15,  20,  51,  56,  87,  92, 123, 128, 159, 164, 195],
@@ -53,10 +72,10 @@ LED_LAYOUT = {
 }
 
 class MoonBoard:
-    DEFAULT_PROBLEM_COLORS = {'START':COLORS.blue,'TOP':COLORS.red,'MOVES':COLORS.green}
+    DEFAULT_PROBLEM_COLORS = {'START':COLORS.LightGreen,'TOP':COLORS.MediumVioletRed,'MOVES':COLORS.DeepSkyBlue,'FEET':COLORS.Gold}
     DEFAULT_COLOR = COLORS.blue
     X_GRID_NAMES = string.ascii_uppercase[0:11]
-    NUM_PIXELS = 198
+    NUM_PIXELS = 402
     DEFAULT_BRIGHTNESS = 150
 
     def __init__(self, driver_type, led_layout=None, brightness=DEFAULT_BRIGHTNESS):
@@ -75,19 +94,11 @@ class MoonBoard:
             print("Use bibliopixel.drivers.dummy_driver")
             driver = DriverDummy(self.NUM_PIXELS)
 
-        if led_layout is not None:
-            self.layout = Matrix(driver,
-                                width=11,
-                                height=18,
-                                coord_map=led_layout,
-                                threadedUpdate=True,
-                                brightness=brightness
-                                )
-        else:
-            self.layout = Matrix(driver,width=11,height=18, 
-                                threadedUpdate=True,
-                                brightness=brightness
-                                )
+        self.moonboard_layout = led_layout
+        self.layout = Strip(driver,
+                            threadedUpdate=True,
+                            brightness=brightness
+                            )
         self.layout.cleanup_drivers()
         self.layout.start()
         self.animation = None
@@ -98,10 +109,13 @@ class MoonBoard:
         self.layout.push_to_driver()
 
     def set_hold(self, hold, color=DEFAULT_COLOR):
-        x_grid_name, y_grid_name = hold[0], int(hold[1:])
-        x = self.X_GRID_NAMES.index(x_grid_name)
-        y = 18 - y_grid_name
-        self.layout.set(x, y, color)
+        try:
+            x_grid_name, y_grid_name = hold[0], int(hold[1:])
+            x = self.X_GRID_NAMES.index(x_grid_name)
+            y = 18 - y_grid_name
+            self.layout.set(self.moonboard_layout[y][x], color)
+        except ValueError:
+            self.layout.set(int(hold),color)
 
     def show_hold(self, hold, color=DEFAULT_COLOR):
         self.set_hold(hold, color)
@@ -109,11 +123,12 @@ class MoonBoard:
 
     def show_problem(self, holds, hold_colors={}):
         self.clear()
-        for k in ['START', 'MOVES', 'TOP']:
-            for hold in holds[k]:
-                self.set_hold(
-                    hold, 
-                    hold_colors.get(k, self.DEFAULT_PROBLEM_COLORS[k]),
+        for k in ['START', 'MOVES', 'TOP', 'FEET']:
+            if k in holds:
+                for hold in holds[k]:
+                    self.set_hold(
+                        hold, 
+                        hold_colors.get(k, self.DEFAULT_PROBLEM_COLORS[k]),
                     )
         self.layout.push_to_driver()
 
@@ -159,4 +174,4 @@ if __name__=="__main__":
     #print(f"wait {args.duration} seconds,")
     time.sleep(args.duration)
     print("clear and exit.")
-    MOONBOARD.clear()
+    MOONBOARD.clear()	

@@ -10,6 +10,7 @@ namespace moonboard.DBus
     [DBusInterface("com.moonboard")]
     interface IMoonboard : IDBusObject
     {
+        Task publish_problemAsync(object Problem);
         Task<IDisposable> Watchnew_problemAsync(Action<string> handler, Action<Exception> onError = null);
     }
 

@@ -9,8 +9,8 @@ sudo echo blacklist snd_bcm2835 > /etc/modprobe.d/raspi-blacklist.conf # FIXME: 
 
 
 # Install dependencies
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get -y update
+sudo apt-get -y upgrade
 sudo apt-get -y install git vim python3-pip gcc make build-essential
 sudo apt-get -y install libatlas-base-dev 
 sudo apt-get -y install python-dev swig scons # for building WS2811 drivers
@@ -40,12 +40,16 @@ sudo cp /home/pi/moonboard/ble/com.moonboard.service /usr/share/dbus-1/system-se
 echo "Install .Net Core"
 wget https://download.visualstudio.microsoft.com/download/pr/349f13f0-400e-476c-ba10-fe284b35b932/44a5863469051c5cf103129f1423ddb8/dotnet-sdk-3.1.102-linux-arm.tar.gz
 wget https://download.visualstudio.microsoft.com/download/pr/8ccacf09-e5eb-481b-a407-2398b08ac6ac/1cef921566cb9d1ca8c742c9c26a521c/aspnetcore-runtime-3.1.2-linux-arm.tar.gz
-sudo mkdir -p /opt/dotnet
-sudo tar zxf dotnet-sdk-3.1.102-linux-arm.tar.gz -C /opt/dotnet
-sudo tar zxf aspnetcore-runtime-3.1.2-linux-arm.tar.gz -C /opt/dotnet
+sudo mkdir -p /usr/share/dotnet
+sudo tar zxf dotnet-sdk-3.1.102-linux-arm.tar.gz -C /usr/share/dotnet
+sudo tar zxf aspnetcore-runtime-3.1.2-linux-arm.tar.gz -C /usr/share/dotnet
 export DOTNET_ROOT=/opt/dotnet
 export PATH=$PATH:/opt/dotnet
-sudo ln -s /opt/dotnet/dotnet /usr/local/bin
+sudo ln -s /usr/share/dotnet/dotnet /usr/local/bin
+
+echo "Install NodeJS"
+sudo apt-get -y install nodejs
+sudo apt-get -y install npm
 
 echo "Prepare logfiles"
 sudo touch /var/log/moonboard

@@ -87,6 +87,10 @@ class MoonApplication(dbus.service.Object):
             self.new_problem(json.dumps(problem))
             start_adv(self.logger)
 
+    @dbus.service.method(dbus_interface="com.moonboard",signature="s")
+    def publish_problem(self, problem):
+        self.new_problem(problem)
+
     @dbus.service.signal(dbus_interface="com.moonboard",
                             signature="s")
     def new_problem(self, problem):

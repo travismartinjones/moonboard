@@ -6,12 +6,6 @@
   </PropertyGroup>
 
     <ItemGroup>
-    <Reference Include="Python.Runtime">
-      <HintPath>References\Python.Runtime.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Tmds.Dbus" Version="0.9.1" />
     </ItemGroup>
 </Project>

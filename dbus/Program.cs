@@ -23,7 +23,7 @@ namespace dbustest
                     var ledLocations = Enumerable.Range(0, 10)
                     .Select(r => _rand.Next(400))
                     .ToList();
-                    var problem = "{\"FEET\": [" + string.Join(",",ledLocations) + "]}";
+                    var problem = "{\"FEET\": [\"" + string.Join("\",\"",ledLocations) + "\"]}";
                     Console.WriteLine($"Sending problem: {problem}. Press a key to send another.");
                     await moonboard.publish_problemAsync(problem).ConfigureAwait(true);
                     Console.ReadLine();

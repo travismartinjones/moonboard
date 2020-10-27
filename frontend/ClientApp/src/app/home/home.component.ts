@@ -10,9 +10,9 @@ class Cell {
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
-  cells: [][];
-  const columns: number = 27;
-  const rows: number = 36;
+  cells: Cell[][];
+  columns: number = 23;
+  rows: number = 36;
 
   constructor() {
     this.cells = [];
@@ -27,8 +27,10 @@ export class HomeComponent {
     for (let column = 0; column < this.columns; column++) {
       for (let row = 0; row < this.rows; row++) {
         if (column%2===0 && (row === 0 || row === this.rows-1)) {
-          this.cells[row][column] = { index: "X", type: "gap" };
-
+          this.cells[row][column] = { index: -1, type: "gap" };
+          if (row === this.rows - 1) {
+            flipIndex = !flipIndex;
+          }
           continue;
         }
 
@@ -43,10 +45,10 @@ export class HomeComponent {
           hold = true;
         }
 
-        let index = flipIndex === true ? (this.rows - row - 1) : row;
+        const index = flipIndex ? (this.rows - row - 1) : row;
         this.cells[index][column] = { index: lightIndex, type: "test" };
 
-        if (row === 0 && !flipIndex || row === this.rows - 1 && flipIndex) {
+        if (row === this.rows - 1) {
           flipIndex = !flipIndex;
         }
       }

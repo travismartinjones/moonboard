@@ -1,10 +1,16 @@
 <div class="home">
     Home
-    <table>
-        <tr *ngFor="let row of cells">
-            <td *ngFor="let column of row" [class]="column.type" style="width: 40px; height: 40px">
-                {{column.index}}
-            </td>
-        </tr>
-    </table>
+  <table>
+    <tr>
+      <th *ngFor="let item of [].constructor(columns+1); let i = index" style="width: 40px; height: 10px">
+        {{i}}
+      </th>
+    </tr>
+    <tr *ngFor="let row of cells; let i = index">
+      <td><b>{{i+1}}</b></td>
+      <td *ngFor="let column of row" [class]="column.type" style="width: 40px; height: 40px">
+        {{column.index}}
+      </td>
+    </tr>
+  </table>
 </div>

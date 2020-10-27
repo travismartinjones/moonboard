@@ -26,11 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Python.Runtime">
-      <HintPath>References\Python.Runtime.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="ViewModels\" />
     <Folder Include="ClientApp\src\app\problem\" />
   </ItemGroup>

@@ -8,13 +8,15 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { ProblemComponent } from './problem/problem.component';
+import { AddProblemComponent } from './add-problem/add-problem.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    ProblemComponent
+    ProblemComponent,
+    AddProblemComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -23,6 +25,7 @@ import { ProblemComponent } from './problem/problem.component';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'problem', component: ProblemComponent },
+      { path: 'add-problem', component: AddProblemComponent }
     ])
   ],
   providers: [],

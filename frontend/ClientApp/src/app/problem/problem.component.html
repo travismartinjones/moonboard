@@ -1,3 +1,11 @@
 <div class="problem">
-
+    <table style="background-color: #EEE; border: solid 2px #CCC">
+        <tr *ngFor="let row of cells; let i = index">
+            <td *ngFor="let column of row" [class]="column.type" (click)="onHoldSelected(column.index)">
+                <div *ngIf="column.type == 'hold'" style="padding: 0; width: 20px; height: 20px; background-color: #DDD; border: solid 1px gray"></div>
+                <div *ngIf="column.type == 'light'" style="padding: 0; margin-left: 9px; height: 2px; width: 2px; background-color: #DDD;"></div>
+                <div *ngIf="column.type == 'gap'" style="padding: 0; height: 20px; width: 20px;"></div>
+            </td>
+        </tr>
+    </table>
 </div>

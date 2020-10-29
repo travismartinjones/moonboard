@@ -1,2 +1,43 @@
-.problem {
+.hold {
+  background-color: #DDD;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+}
+
+.light {
+  background-color: #DDD;
+  padding: 0;
+  margin-left: 9px;
+  height: 2px;
+  width: 2px;
+}
+
+.gap {
+  padding: 0;
+  height: 20px;
+  width: 20px;
+}
+
+.problem .FEET {
+    border-color: orange;
+    background-color: peachpuff;
+}
+
+.problem .START {
+  border-color: green;
+  background-color: lightgreen;
+}
+
+.problem .TOP {
+  border-color: red;
+  background-color: pink;
+}
+
+.problem .MOVES {
+  border-color: blue;
+  background-color: lightblue;
 }

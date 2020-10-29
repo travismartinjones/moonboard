@@ -4,6 +4,7 @@ import { Problem, Route } from '../problem';
 class Cell {
   index: number;
   type: string;
+  holdType: string;
 }
 
 @Component({
@@ -71,17 +72,28 @@ export class ProblemComponent {
     if (this.problem.route.START.filter(x => x === hold).length > 0) {
       this.problem.route.START = this.problem.route.START.filter(x => x !== hold);
       this.problem.route.MOVES.push(hold);
+      this.updateCells(index, 'MOVES');
     } else if (this.problem.route.MOVES.filter(x => x === hold).length > 0) {
       this.problem.route.MOVES = this.problem.route.MOVES.filter(x => x !== hold);
       this.problem.route.TOP.push(hold);
+      this.updateCells(index, 'TOP');
     } else if (this.problem.route.TOP.filter(x => x === hold).length > 0) {
       this.problem.route.TOP = this.problem.route.TOP.filter(x => x !== hold);
       this.problem.route.FEET.push(hold);
+      this.updateCells(index, 'FEET');
     } else if (this.problem.route.FEET.filter(x => x === hold).length > 0) {
       this.problem.route.FEET = this.problem.route.FEET.filter(x => x !== hold);
+      this.updateCells(index, 'NONE');
     } else {
       this.problem.route.START.push(hold);
+      this.updateCells(index, 'START');
     }
-    alert(JSON.stringify(this.problem));
+  }
+
+  updateCells(index: number, holdType: string) {
+    for (let i = 0; i < this.cells.length; i++)
+      for (let j = 0; j < this.cells[i].length; j++)
+        if (this.cells[i][j].index === index)
+          this.cells[i][j].holdType = holdType;
   }
 }

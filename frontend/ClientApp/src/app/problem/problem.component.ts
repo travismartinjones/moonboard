@@ -36,7 +36,7 @@ export class ProblemComponent {
     for (let column = 0; column < this.columns; column++) {
       for (let row = 0; row < this.rows; row++) {
         if (column % 2 === 0 && (row === 0 || row === this.rows - 1)) {
-          this.cells[row][column] = { index: -1, type: 'gap' };
+          this.cells[row][column] = { index: -1, type: 'gap', holdType: '' };
           if (row === this.rows - 1) {
             flipIndex = !flipIndex;
           }
@@ -55,7 +55,7 @@ export class ProblemComponent {
         }
 
         const index = flipIndex ? (this.rows - row - 1) : row;
-        this.cells[index][column] = { index: lightIndex, type: hold ? (flipIndex ? 'hold' : 'light') : (light ? (flipIndex ? 'light' : 'hold') : 'gap') };
+        this.cells[index][column] = { index: lightIndex, type: hold ? (flipIndex ? 'hold' : 'light') : (light ? (flipIndex ? 'light' : 'hold') : 'gap'), holdType: '' };
 
         if (row === this.rows - 1) {
           flipIndex = !flipIndex;

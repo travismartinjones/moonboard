@@ -1,5 +1,5 @@
-<div class="problem">
-    <table style="background-color: #EEE; border: solid 2px #CCC">
+<div>
+    <table class="problem">
         <tr *ngFor="let row of cells; let i = index">
             <td *ngFor="let column of row" (click)="onHoldSelected(column.index)">
                 <div>

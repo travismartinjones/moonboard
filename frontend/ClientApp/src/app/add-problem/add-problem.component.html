@@ -1,3 +1,54 @@
 <h4>Add Problem</h4>
 
-<problem [readonly]="false"></problem>
+<form (submit)="addProblem()">
+  <div class="form-group row">
+    <label for="name" class="col-sm-1 col-form-label">Name</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" id="name" placeholder="Boulder Name" [class.is-invalid]="isNameInvalid" ([ngModel])="problem.name">
+      <div class="invalid-feedback">
+        Please add a boulder name.
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="setter" class="col-sm-1 col-form-label">Setter</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" id="setter" placeholder="Setter Name" [class.is-invalid]="isSetterNameInvalid" ([ngModel])="problem.setter">
+      <div class="invalid-feedback">
+        Please add a setter name.
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="difficulty" class="col-sm-1 col-form-label">Difficulty</label>
+    <div class="col-sm-6">
+      <ul class="list-group list-group-horizontal" [class.is-invalid]="isDifficultyInvalid">
+        <li class="list-group-item" [class.active]="problem.difficulty === 'V0'" (click)="selectDifficulty('V0')">V0</li>
+        <li class="list-group-item" [class.active]="problem.difficulty === 'V1'" (click)="selectDifficulty('V1')">V1</li>
+        <li class="list-group-item" [class.active]="problem.difficulty === 'V2'" (click)="selectDifficulty('V2')">V2</li>
+        <li class="list-group-item" [class.active]="problem.difficulty === 'V3'" (click)="selectDifficulty('V3')">V3</li>
+        <li class="list-group-item" [class.active]="problem.difficulty === 'V4'" (click)="selectDifficulty('V4')">V4</li>
+        <li class="list-group-item" [class.active]="problem.difficulty === 'V5'" (click)="selectDifficulty('V5')">V5</li>
+        <li class="list-group-item" [class.active]="problem.difficulty === 'V6'" (click)="selectDifficulty('V6')">V6</li>
+        <li class="list-group-item" [class.active]="problem.difficulty === 'V7'" (click)="selectDifficulty('V7')">V7</li>
+        <li class="list-group-item" [class.active]="problem.difficulty === 'V8'" (click)="selectDifficulty('V8')">V8</li>
+      </ul>
+      <div class="invalid-feedback">
+        Please select a difficulty.
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="ml-2">
+        <problem [readonly]="false" [class.is-invalid]="isProblemInvalid" [problem]="problem" (onProblemChanged)="onProblemChanged($event)"></problem>
+      </div>
+      <div class="invalid-feedback">
+        {{problemError}}
+      </div>
+    </div>
+  </div>
+  <div class="row p-1 mb-4">
+    <button type="submit" class="btn btn-primary col-sm-7">Add</button>
+  </div>
+</form>

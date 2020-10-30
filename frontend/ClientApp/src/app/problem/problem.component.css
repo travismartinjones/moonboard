@@ -1,25 +1,31 @@
+.problem {
+  background-color: #EEE;
+  border: solid 2px #CCC;
+}
+
 .hold {
-  background-color: #DDD;
+  background-color: #EEE;
   padding: 0;
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   border-style: solid;
   border-width: 1px;
-  border-radius: 10px;
+  border-radius: 13px;
 }
 
 .light {
   background-color: #DDD;
   padding: 0;
-  margin-left: 9px;
-  height: 2px;
-  width: 2px;
+  margin-left: 11px;
+  height: 4px;
+  width: 4px;
+  border-radius: 2px;
 }
 
 .gap {
   padding: 0;
-  height: 20px;
-  width: 20px;
+  height: 25px;
+  width: 25px;
 }
 
 .problem .FEET {

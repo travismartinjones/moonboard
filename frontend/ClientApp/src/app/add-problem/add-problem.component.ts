@@ -7,6 +7,7 @@ import { Problem } from "../problem";
 })
 export class AddProblemComponent {
   error: string;
+  difficulty: number = 0;
   isNameInvalid: boolean;
   isSetterNameInvalid: boolean;
   isDifficultyInvalid: boolean;
@@ -22,7 +23,12 @@ export class AddProblemComponent {
     this.problem.difficulty = value;
   }
 
+  updateDifficulty(difficulty: number) {
+    this.difficulty = difficulty;
+  }
+
   addProblem() {
+    this.problem.difficulty = 'V' + this.difficulty;
     this.isNameInvalid = !this.problem.name;
     this.isSetterNameInvalid = !this.problem.setter;
     this.isDifficultyInvalid = !this.problem.difficulty;

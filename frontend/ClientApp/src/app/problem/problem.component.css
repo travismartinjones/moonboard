@@ -5,27 +5,24 @@
 
 .hold {
   background-color: #EEE;
-  padding: 0;
-  width: 25px;
-  height: 25px;
+  width: calc( 90vw / 27 );
+  height: calc( 90vw / 27 );
   border-style: solid;
   border-width: 1px;
-  border-radius: 13px;
+  border-radius: calc( 90vw / 54 );
 }
 
 .light {
   background-color: #DDD;
-  padding: 0;
-  margin-left: 11px;
-  height: 4px;
-  width: 4px;
-  border-radius: 2px;
+  margin-left: calc( (90vw / 54) - (90vw / 300));
+  height: calc( 90vw / 150 );
+  width: calc( 90vw / 150 );
+  border-radius: calc( (90vw) / 216 );
 }
 
 .gap {
-  padding: 0;
-  height: 25px;
-  width: 25px;
+  height: calc( 90vw / 27 );
+  width: calc( 90vw / 27 );
 }
 
 .problem .FEET {

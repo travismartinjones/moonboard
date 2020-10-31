@@ -1,6 +1,9 @@
-<h4>Add Problem</h4>
-
 <form (submit)="addProblem()">
+  <div class="form-group row">
+    <div class="col-sm-1">
+      <button type="submit" class="btn btn-primary">Add Problem</button>
+    </div>
+  </div>
   <div class="form-group row">
     <label for="name" class="col-sm-1 col-form-label">Name</label>
     <div class="col-sm-6">
@@ -39,16 +42,11 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-6">
-      <div class="ml-2">
-        <problem [readonly]="false" [class.is-invalid]="isProblemInvalid" [problem]="problem" (onProblemChanged)="onProblemChanged($event)"></problem>
-      </div>
+    <div class="col-sm-7">
+      <problem [readonly]="false" [class.is-invalid]="isProblemInvalid" [problem]="problem" (onProblemChanged)="onProblemChanged($event)"></problem>
       <div class="invalid-feedback">
         {{problemError}}
       </div>
     </div>
-  </div>
-  <div class="row p-1 mb-4">
-    <button type="submit" class="btn btn-primary col-sm-7">Add</button>
   </div>
 </form>

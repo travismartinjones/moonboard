@@ -72,7 +72,7 @@ LED_LAYOUT = {
 }
 
 class MoonBoard:
-    DEFAULT_PROBLEM_COLORS = {'START':COLORS.LightGreen,'TOP':COLORS.MediumVioletRed,'MOVES':COLORS.DeepSkyBlue,'FEET':COLORS.Gold}
+    DEFAULT_PROBLEM_COLORS = {'START':COLORS.MediumSpringGreen,'TOP':COLORS.DarkViolet,'MOVES':COLORS.DeepSkyBlue,'FEET':COLORS.Gold}
     DEFAULT_COLOR = COLORS.blue
     X_GRID_NAMES = string.ascii_uppercase[0:11]
     NUM_PIXELS = 402

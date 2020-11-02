@@ -9,8 +9,27 @@ export class ProblemsService {
     @Inject('BASE_URL') private baseUrl: string
   ) { }
 
-  showRoute(problem: Problem) {
-    this.httpClient.post(this.baseUrl + 'problems', problem).subscribe(result => {
-    }, error => { });
+  addProblem(problem: Problem): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      this.httpClient.post(this.baseUrl + 'problems', problem).subscribe(
+        result => { resolve(result); },
+        error => { reject(); });
+    });
+  }
+
+  updateProblem(problem: Problem): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      this.httpClient.put(this.baseUrl + 'problems', problem).subscribe(
+        result => { resolve(result); },
+        error => { reject(); });
+    });
+  }
+
+  deleteProblem(id: string): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      this.httpClient.delete(this.baseUrl + 'problems/' + id).subscribe(
+        result => { resolve(result); },
+        error => { reject(); });
+    });
   }
 }

@@ -1,4 +1,4 @@
-﻿import { Injectable, Inject } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Route } from "../problem";
 
@@ -9,7 +9,9 @@ export class LedsService {
     @Inject('BASE_URL') private baseUrl: string
   ) { }
 
-  showRoute(route: Route) {
-    this.httpClient.put(this.baseUrl + 'leds', route).subscribe(result => { }, error => { });
+  showRoute(route: Route): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      this.httpClient.put(this.baseUrl + 'leds', route).subscribe(result => { resolve(); }, error => { reject(); });
+    });
   }
 }

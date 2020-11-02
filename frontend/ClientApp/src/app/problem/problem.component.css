@@ -25,7 +25,9 @@
 .light {
   max-width: 4px;
   max-height: 4px;
-  margin: auto auto;
+  top: calc(50% - 90vw / 300);
+  left: calc(50% - 90vw / 300);
+  position: relative;
   background-color: #DDD;
   height: calc( 90vw / 150 );
   width: calc( 90vw / 150 );

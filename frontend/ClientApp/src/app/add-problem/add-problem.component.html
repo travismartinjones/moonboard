@@ -5,8 +5,8 @@
     </div>
   </div>
   <div class="form-group row">
-    <label for="name" class="col-sm-1 col-form-label">Name</label>
-    <div class="col-sm-6">
+    <label for="name" class="col-sm-2 col-form-label">Name</label>
+    <div class="col-sm-7">
       <input type="text" class="form-control" id="name" name="name" placeholder="Boulder Name" [class.is-invalid]="isNameInvalid" [(ngModel)]="problem.name">
       <div class="invalid-feedback">
         Please add a boulder name.
@@ -14,8 +14,8 @@
     </div>
   </div>
   <div class="form-group row">
-    <label for="setter" class="col-sm-1 col-form-label">Setter</label>
-    <div class="col-sm-6">
+    <label for="setter" class="col-sm-2 col-form-label">Setter</label>
+    <div class="col-sm-7">
       <input type="text" class="form-control" id="setter" name="setter" placeholder="Setter Name" [class.is-invalid]="isSetterNameInvalid" [(ngModel)]="problem.setter">
       <div class="invalid-feedback">
         Please add a setter name.
@@ -23,9 +23,9 @@
     </div>
   </div>
   <div class="form-group row">
-    <label for="difficulty" class="col-sm-1 col-form-label">Difficulty V{{difficulty}}</label>
-    <div class="col-sm-6">
-        <input class="form-control" type="range" min="0" max="10" step="1" name="difficulty" [(ngModel)]="difficulty" />
+    <label for="difficulty" class="col-sm-2 col-form-label">Difficulty</label>
+    <div class="col-sm-7 mt-4">
+        <nouislider [config]="sliderConfig" name="difficulty" [(ngModel)]="difficulty"></nouislider>
         <div class="invalid-feedback">
             Please select a difficulty.
         </div>

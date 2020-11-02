@@ -1,5 +1,17 @@
 import { Component } from '@angular/core';
 import { Problem } from "../problem";
+import { NouisliderModule } from 'ng2-nouislider';
+import { NouiFormatter } from "ng2-nouislider/src/nouislider";
+
+export class VDifficultyFormatter implements NouiFormatter {
+  to(value: number): string {
+    return "V" + value;
+  }
+
+  from(value: string): number {
+    return parseInt(value.replace("V", ""));
+  }
+}
 
 @Component({
   selector: 'app-problem',
@@ -14,6 +26,15 @@ export class AddProblemComponent {
   isProblemInvalid: boolean;
   problemError: string;
   problem: Problem;
+  sliderConfig: any = {
+    step: 1,
+    connect: 'lower',
+    range: {
+      min: 0,
+      max: 10
+    },
+    tooltips: [new VDifficultyFormatter()]
+  };
 
   constructor() {
     this.problem = new Problem();

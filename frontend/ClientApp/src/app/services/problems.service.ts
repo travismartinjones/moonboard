@@ -8,8 +8,4 @@ export class ProblemsService {
     private httpClient: HttpClient,
     @Inject('BASE_URL') private baseUrl: string
   ) {}
-
-  showProblem(problem: Problem) {
-    this.httpClient.put(this.baseUrl + 'leds', problem).subscribe(result => {}, error => {});
-  }
 }

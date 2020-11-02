@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Problem, Route } from '../problem';
+import { LedsService } from '../services/leds.service';
 
 class Cell {
   index: number;
@@ -21,7 +22,9 @@ export class ProblemComponent {
   columns: number = 23;
   rows: number = 36;
 
-  constructor() {
+  constructor(
+    private ledsService: LedsService
+  ) {
     this.problem = new Problem();
 
     this.cells = [];
@@ -88,6 +91,8 @@ export class ProblemComponent {
       this.problem.route.START.push(hold);
       this.updateCells(index, 'START');
     }
+
+    this.ledsService.showRoute(this.problem.route);
   }
 
   updateCells(index: number, holdType: string) {

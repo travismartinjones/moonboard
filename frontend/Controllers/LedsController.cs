@@ -26,9 +26,9 @@ namespace frontend.Controllers
         }
         
         [HttpPut]
-        public async Task Put(Problem problem)
+        public async Task Put(Route route)
         {
-            await moonboard.publish_problemAsync(JsonConvert.SerializeObject(problem)).ConfigureAwait(true);
+            await moonboard.publish_problemAsync(JsonConvert.SerializeObject(route)).ConfigureAwait(true);
         }
     }
 }

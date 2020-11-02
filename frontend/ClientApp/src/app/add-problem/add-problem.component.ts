@@ -1,17 +1,7 @@
 import { Component } from '@angular/core';
 import { Problem } from "../problem";
 import { NouisliderModule } from 'ng2-nouislider';
-import { NouiFormatter } from "ng2-nouislider/src/nouislider";
-
-export class VDifficultyFormatter implements NouiFormatter {
-  to(value: number): string {
-    return "V" + value;
-  }
-
-  from(value: string): number {
-    return parseInt(value.replace("V", ""));
-  }
-}
+import { VDifficultyFormatter } from '../vdifficultyformatter';
 
 @Component({
   selector: 'app-problem',

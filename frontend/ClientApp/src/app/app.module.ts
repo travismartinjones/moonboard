@@ -11,6 +11,7 @@ import { ProblemComponent } from './problem/problem.component';
 import { AddProblemComponent } from './add-problem/add-problem.component';
 import { LedsService } from './services/leds.service';
 import { ProblemsService } from './services/problems.service';
+import { VDifficultyFormatter } from './vdifficultyformatter';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { ProblemsService } from './services/problems.service';
   ],
   providers: [
     LedsService,
-    ProblemsService],
+    ProblemsService,
+    VDifficultyFormatter],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

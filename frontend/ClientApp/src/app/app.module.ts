@@ -9,6 +9,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { ProblemComponent } from './problem/problem.component';
 import { AddProblemComponent } from './add-problem/add-problem.component';
+import { EditProblemComponent } from './edit-problem/edit-problem.component';
 import { LedsService } from './services/leds.service';
 import { ProblemsService } from './services/problems.service';
 import { VDifficultyFormatter } from './vdifficultyformatter';
@@ -19,7 +20,8 @@ import { VDifficultyFormatter } from './vdifficultyformatter';
     NavMenuComponent,
     HomeComponent,
     ProblemComponent,
-    AddProblemComponent
+    AddProblemComponent,
+    EditProblemComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -29,7 +31,8 @@ import { VDifficultyFormatter } from './vdifficultyformatter';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'problem', component: ProblemComponent },
-      { path: 'add-problem', component: AddProblemComponent }
+      { path: 'add-problem', component: AddProblemComponent },
+      { path: 'edit-problem/:id', component: EditProblemComponent }
     ])
   ],
   providers: [

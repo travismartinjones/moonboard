@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { Problem } from "../problem";
 import { NouisliderModule } from 'ng2-nouislider';
 import { VDifficultyFormatter } from '../vdifficultyformatter';
 import { ProblemsService } from '../services/problems.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'add-problem',
-  templateUrl: './add-problem.component.html'
+  selector: 'edit-problem',
+  templateUrl: './edit-problem.component.html'
 })
-export class AddProblemComponent {
+export class EditProblemComponent implements OnInit {
   error: string;
   difficulty: number = 0;
   isNameInvalid: boolean;
@@ -17,6 +17,7 @@ export class AddProblemComponent {
   isDifficultyInvalid: boolean;
   isProblemInvalid: boolean;
   problemError: string;
+  id: string;
   problem: Problem;
   sliderConfig: any = {
     step: 1,
@@ -30,10 +31,17 @@ export class AddProblemComponent {
 
   constructor(
     private problemsService: ProblemsService,
-    private router: Router
+    private router: Router,
+    activatedRoute: ActivatedRoute
   ) {
+    this.id = activatedRoute.snapshot.paramMap.get("id");
+  }
 
-    this.problem = new Problem();
+  ngOnInit() {
+    this.problemsService.getById(this.id).then(problem => {
+      this.problem = problem;
+      this.difficulty = parseInt(this.problem.difficulty.replace("V", ""));
+    });
   }
 
   selectDifficulty(value: string) {
@@ -44,7 +52,7 @@ export class AddProblemComponent {
     this.difficulty = difficulty;
   }
 
-  addProblem() {
+  updateProblem() {
     this.problem.difficulty = 'V' + this.difficulty;
     this.isNameInvalid = !this.problem.name;
     this.isSetterNameInvalid = !this.problem.setter;
@@ -62,7 +70,7 @@ export class AddProblemComponent {
 
     if (this.isNameInvalid || this.isSetterNameInvalid || this.isDifficultyInvalid || this.isProblemInvalid) return;
 
-    this.problemsService.addProblem(this.problem).then(() => {
+    this.problemsService.updateProblem(this.problem).then(() => {
       this.router.navigate(['/']);
     });
   }

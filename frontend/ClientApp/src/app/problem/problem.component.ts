@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, OnChanges, SimpleChange, EventEmitter } from '@angular/core';
 import { Problem, Route } from '../problem';
 import { LedsService } from '../services/leds.service';
 
@@ -13,7 +13,7 @@ class Cell {
   templateUrl: './problem.component.html',
   styleUrls: ['./problem.component.css']
 })
-export class ProblemComponent {
+export class ProblemComponent implements OnInit {
   @Input() problem: Problem;
   @Input() readonly: boolean;
   @Output() onProblemChanged: EventEmitter<Problem> = new EventEmitter<Problem>();
@@ -67,6 +67,24 @@ export class ProblemComponent {
     }
   }
 
+  ngOnInit() {
+    if (this.problem) {
+      this.initialize();
+    }
+  }
+
+  ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+    if (changes['problem']) {
+      this.initialize();
+    }
+  }
+
+  initialize() {
+    if (!this.problem || !this.problem.route) return;
+    this.ledsService.showRoute(this.problem.route);
+    this.updateCellsToMatchProblem();
+  }
+
   onHoldSelected(index: number) {
     if (index < 0) return; // gap pressed
     if (this.readonly) return;
@@ -100,5 +118,25 @@ export class ProblemComponent {
       for (let j = 0; j < this.cells[i].length; j++)
         if (this.cells[i][j].index === index)
           this.cells[i][j].holdType = holdType;
+  }
+
+  
+  updateCellsToMatchProblem() {
+    for (let i = 0; i < this.cells.length; i++)
+      for (let j = 0; j < this.cells[i].length; j++)
+        this.cells[i][j].holdType = '';
+
+    for (let index of this.problem.route.START) {
+      this.updateCells(parseInt(index), 'START');
+    }
+    for (let index of this.problem.route.FEET) {
+      this.updateCells(parseInt(index), 'FEET');
+    }
+    for (let index of this.problem.route.TOP) {
+      this.updateCells(parseInt(index), 'TOP');
+    }
+    for (let index of this.problem.route.MOVES) {
+      this.updateCells(parseInt(index), 'MOVES');
+    }
   }
 }

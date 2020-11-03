@@ -32,4 +32,22 @@ export class ProblemsService {
         error => { reject(); });
     });
   }
+
+
+  search(name: string, min: string, max: string, setter: string): Promise<Problem[]> {
+    return new Promise<Problem[]>((resolve, reject) => {
+      this.httpClient.get(this.baseUrl + 'problems/search?name=' + (name ? name : '') + '&min=' + (min ? min : '') + '&max=' + (max ? max : '') + '&setter=' + (setter ? setter : '')).subscribe(
+        result => { resolve(result as Problem[]); },
+        error => { reject(); });
+    });
+  }
+
+  getById(id: string): Promise<Problem> {
+    return new Promise<Problem>((resolve, reject) => {
+      this.httpClient.get(this.baseUrl + 'problems/' + id).subscribe(
+        result => { resolve(result as Problem); },
+        error => { reject(); });
+    });
+  }
+
 }

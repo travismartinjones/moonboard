@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="ViewModels\" />
+    <Folder Include="ClientApp\src\app\edit-problem\" />
   </ItemGroup>
 
   <ItemGroup>

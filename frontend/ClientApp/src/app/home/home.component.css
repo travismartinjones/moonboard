@@ -1,2 +1,12 @@
 .home {
 }
+
+.table-fixed {
+  overflow-y: auto;
+  height: 200px;
+}
+
+.table-fixed thead th {
+  position: sticky;
+  top: -2px;
+}

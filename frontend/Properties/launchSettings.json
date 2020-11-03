@@ -18,7 +18,7 @@
     "frontend": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://+:80/",
+      "applicationUrl": "http://+:5080/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

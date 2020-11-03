@@ -1,4 +1,34 @@
 <div class="home">
-    Home
+    <form (submit)="search()">
+        <div class="form-group row">
+            <div class="col-sm-6 mt-0 mt-sm-5">
+                <input type="text" class="form-control" id="name" name="name" placeholder="Search" [(ngModel)]="name" (ngModelChange)="onNameChange($event)">
+            </div>
+            <div class="col-sm-6 mt-5">
+                <nouislider [config]="sliderConfig" name="difficulty" [(ngModel)]="difficultyRange" (ngModelChange)="onDifficultyChange($event)"></nouislider>
+            </div>
+        </div>
+    </form>
+    <div class="table-fixed">
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Difficuly</th>
+                    <th>Setter</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let problem of problems" (click)="selectProblem(problem)" [class.bg-info]="selectedProblem === problem" [class.text-white]="selectedProblem === problem">
+                    <td>{{problem.name}}</td>
+                    <td>{{problem.difficulty}}</td>
+                    <td>{{problem.setter}}</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
     <problem [readonly]="!isEditing" [problem]="selectedProblem" (onProblemChanged)="onProblemChanged($event)"></problem>
+    <div class="mt-2 mb-2">
+        <button *ngIf="selectedProblem" type="submit" class="btn btn-primary col-sm-2" (click)="edit()">Edit</button><button *ngIf="selectedProblem" type="submit" (click)="delete()" class="btn btn-danger col-sm-2 ml-sm-2">Delete</button>
+    </div>
 </div>

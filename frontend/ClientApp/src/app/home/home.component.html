@@ -19,11 +19,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let problem of problems" (click)="selectProblem(problem)" [class.bg-info]="selectedProblem === problem" [class.text-white]="selectedProblem === problem">
-                    <td>{{problem.name}}</td>
-                    <td>{{problem.difficulty}}</td>
-                    <td>{{problem.setter}}</td>
-                </tr>
+                <ng-container *ngFor="let problem of problems">
+                    <tr (click)="selectProblem(problem)" [class.bg-info]="selectedProblem === problem" [class.text-white]="selectedProblem === problem">
+                        <td>{{problem.name}}</td>
+                        <td>{{problem.difficulty}}</td>
+                        <td>{{problem.setter}}</td>
+                    </tr>
+                    <tr *ngIf="selectedProblem === problem && problem.notes" class="bg-light" style="white-space: pre">
+                        <td colspan="3">{{problem.notes}}</td>
+                    </tr>
+                </ng-container>
             </tbody>
         </table>
         </div>

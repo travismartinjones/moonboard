@@ -57,6 +57,7 @@ namespace frontend.Controllers
                 existingProblem.Name = problem.Name;
                 existingProblem.Route = problem.Route;
                 existingProblem.Setter = problem.Setter;
+                existingProblem.Notes = problem.Notes;
                 problems.Update(existingProblem);
             }
         }
@@ -74,7 +75,7 @@ namespace frontend.Controllers
 
         [HttpGet]
         [Route("search")]
-        public List<Problem> Get([FromQuery]string name, [FromQuery]string min, [FromQuery]string max, [FromQuery]string setter)
+        public List<Problem> Get([FromQuery]string name, [FromQuery]string min, [FromQuery]string max)
         {
             using (var db = new LiteDatabase(DatabaseFilename))
             {
@@ -83,7 +84,7 @@ namespace frontend.Controllers
                 var query = problems.Query();
 
                 if (!string.IsNullOrEmpty(name))
-                    query = query.Where(x => x.Name.Contains(name));
+                    query = query.Where(x => x.Name.Contains(name) || x.Notes.Contains(name) || x.Setter.Contains(name));
 
                 var difficulties = new List<string>();
                 var minInt = string.IsNullOrEmpty(min) ? 0 : Int32.Parse(min.Replace("V", ""));
@@ -92,9 +93,6 @@ namespace frontend.Controllers
                 for (var i = minInt; i <= maxInt; i++)
                     difficulties.Add("V" + i);
                 query = query.Where(x => difficulties.Contains(x.Difficulty));
-
-                if (!string.IsNullOrEmpty(setter))
-                    query = query.Where(x => x.Setter.Contains(setter));
 
                 return query.OrderBy(x => x.Name).ToList();
             }

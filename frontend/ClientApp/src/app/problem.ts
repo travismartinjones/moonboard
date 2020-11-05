@@ -17,6 +17,7 @@ export class Problem {
   name: string;
   difficulty: string;
   setter: string;
+  notes: string;
   route: Route;
 
   constructor() {

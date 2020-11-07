@@ -51,6 +51,11 @@ echo "Install NodeJS"
 sudo apt-get -y install nodejs
 sudo apt-get -y install npm
 
+echo "Install Frontend"
+cd /home/pi/moonboard/services
+sudo ./install_service.sh /home/pi/moonboard/frontend/frontend.moonboard.service 
+cd /home/pi/moonboard
+
 echo "Prepare logfiles"
 sudo touch /var/log/moonboard
 sudo chown pi:pi /var/log/moonboard

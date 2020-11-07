@@ -29,7 +29,7 @@ sudo pip3 install -r requirements.txt
 
 echo "Install service"
 cd /home/pi/moonboard/services
-sudo ./install_service.sh moonboard.service 
+sudo /bin/bash /home/pi/moonboard/services/install_service.sh moonboard.service 
 cd /home/pi/moonboard
 
 
@@ -47,13 +47,13 @@ export DOTNET_ROOT=/opt/dotnet
 export PATH=$PATH:/opt/dotnet
 sudo ln -s /usr/share/dotnet/dotnet /usr/local/bin
 
-echo "Install NodeJS"
+echo "Install NodeJS" 
 sudo apt-get -y install nodejs
 sudo apt-get -y install npm
 
 echo "Install Frontend"
-cd /home/pi/moonboard/services
-sudo ./install_service.sh /home/pi/moonboard/frontend/frontend.moonboard.service 
+cd /home/pi/moonboard/frontend
+sudo /bin/bash /home/pi/moonboard/services/install_service.sh frontend.moonboard.service
 cd /home/pi/moonboard
 
 echo "Prepare logfiles"

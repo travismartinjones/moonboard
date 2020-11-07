@@ -15,6 +15,7 @@ export class AddProblemComponent {
   isNameInvalid: boolean;
   isSetterNameInvalid: boolean;
   isDifficultyInvalid: boolean;
+  isArt: boolean;
   isProblemInvalid: boolean;
   problemError: string;
   problem: Problem;
@@ -61,6 +62,9 @@ export class AddProblemComponent {
     }
 
     if (this.isNameInvalid || this.isSetterNameInvalid || this.isDifficultyInvalid || this.isProblemInvalid) return;
+
+    if (this.problem.name.startsWith("Art"))
+      this.problem.name = this.problem.name.replace("Art","𝛀");
 
     this.problemsService.addProblem(this.problem).then(() => {
       this.router.navigate(['/']);

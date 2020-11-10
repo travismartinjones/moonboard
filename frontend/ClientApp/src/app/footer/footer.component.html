@@ -1,0 +1,11 @@
+﻿<div class="box-shadow">
+    <div class="input-group mb-3 pt-3 col-sm-4 hold-setup">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="holdSetup">Setup</label>
+        </div>
+        <select class="custom-select" id="holdSetup" [ngModel]="holdSetup" (ngModelChange)="updateHoldSetup($event)">
+            <option value="Nov2020">2020</option>
+            <option value="Art">Art</option>
+        </select>
+    </div>
+</div>

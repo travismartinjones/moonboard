@@ -4,6 +4,7 @@ import { NouisliderModule } from 'ng2-nouislider';
 import { VDifficultyFormatter } from '../vdifficultyformatter';
 import { ProblemsService } from '../services/problems.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Color } from '../color';
 
 @Component({
   selector: 'edit-problem',
@@ -16,6 +17,8 @@ export class EditProblemComponent implements OnInit {
   isSetterNameInvalid: boolean;
   isDifficultyInvalid: boolean;
   isProblemInvalid: boolean;
+  isArt: boolean = false;
+  currentColor: Color = { r: 0, g: 0, b: 0 };
   problemError: string;
   id: string;
   problem: Problem;
@@ -40,6 +43,7 @@ export class EditProblemComponent implements OnInit {
   ngOnInit() {
     this.problemsService.getById(this.id).then(problem => {
       this.problem = problem;
+      this.isArt = problem.setup === "Art";
       this.difficulty = parseInt(this.problem.difficulty.replace("V", ""));
     });
   }
@@ -50,6 +54,10 @@ export class EditProblemComponent implements OnInit {
 
   updateDifficulty(difficulty: number) {
     this.difficulty = difficulty;
+  }
+
+  toggleIsArt() {
+    this.isArt = !this.isArt;
   }
 
   updateProblem() {

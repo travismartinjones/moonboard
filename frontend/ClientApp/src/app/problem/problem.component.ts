@@ -1,11 +1,13 @@
 import { Component, OnInit, Input, Output, OnChanges, SimpleChange, EventEmitter } from '@angular/core';
 import { Problem, Route } from '../problem';
 import { LedsService } from '../services/leds.service';
+import { Color } from '../color';
 
 class Cell {
   index: number;
   type: string;
   holdType: string;
+  color: string;
 }
 
 @Component({
@@ -16,11 +18,14 @@ class Cell {
 export class ProblemComponent implements OnInit {
   @Input() problem: Problem;
   @Input() readonly: boolean;
+  @Input() artColor: Color;
+  @Input() isArt: boolean;
   @Output() onProblemChanged: EventEmitter<Problem> = new EventEmitter<Problem>();
 
   cells: Cell[][];
   columns: number = 23;
   rows: number = 36;
+  isDrawing: boolean = false;
 
   constructor(
     private ledsService: LedsService
@@ -80,9 +85,29 @@ export class ProblemComponent implements OnInit {
   }
 
   initialize() {
-    if (!this.problem || !this.problem.route) return;
+    if (!this.problem || !this.problem.route) {
+      return;
+    }
     this.ledsService.showRoute(this.problem.route);
     this.updateCellsToMatchProblem();
+  }
+
+  onHoldTouched(index: number) {
+    this.problem.route.RGB = this.problem.route.RGB.filter(x => x.index !== index);
+
+
+    if (this.artColor.r != 0 || this.artColor.g != 0 || this.artColor.b != 0) {
+      this.problem.route.RGB.push({
+        index: index,
+        r: this.artColor.r,
+        g: this.artColor.g,
+        b: this.artColor.b
+      });
+    }
+
+    this.updateCells(index, 'RGB', this.artColor.hex);
+
+    this.ledsService.showRoute(this.problem.route);
   }
 
   onHoldSelected(index: number) {
@@ -93,34 +118,44 @@ export class ProblemComponent implements OnInit {
     if (this.problem.route.START.filter(x => x === hold).length > 0) {
       this.problem.route.START = this.problem.route.START.filter(x => x !== hold);
       this.problem.route.MOVES.push(hold);
-      this.updateCells(index, 'MOVES');
+      this.updateCells(index, 'MOVES', '');
     } else if (this.problem.route.MOVES.filter(x => x === hold).length > 0) {
       this.problem.route.MOVES = this.problem.route.MOVES.filter(x => x !== hold);
       this.problem.route.TOP.push(hold);
-      this.updateCells(index, 'TOP');
+      this.updateCells(index, 'TOP', '');
     } else if (this.problem.route.TOP.filter(x => x === hold).length > 0) {
       this.problem.route.TOP = this.problem.route.TOP.filter(x => x !== hold);
       this.problem.route.FEET.push(hold);
-      this.updateCells(index, 'FEET');
+      this.updateCells(index, 'FEET', '');
     } else if (this.problem.route.FEET.filter(x => x === hold).length > 0) {
       this.problem.route.FEET = this.problem.route.FEET.filter(x => x !== hold);
-      this.updateCells(index, 'NONE');
+      this.updateCells(index, 'NONE', '');
     } else {
       this.problem.route.START.push(hold);
-      this.updateCells(index, 'START');
+      this.updateCells(index, 'START', '');
     }
 
     this.ledsService.showRoute(this.problem.route);
   }
 
-  updateCells(index: number, holdType: string) {
+  updateCells(index: number, holdType: string, color: string) {
     for (let i = 0; i < this.cells.length; i++)
       for (let j = 0; j < this.cells[i].length; j++)
-        if (this.cells[i][j].index === index)
+        if (this.cells[i][j].index === index) {
           this.cells[i][j].holdType = holdType;
+          this.cells[i][j].color = color;
+        }
   }
 
-  
+  componentToHex(c: string): string {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+  }
+
+  rgbToHex(r: number, g: number, b: number): string {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  }
+
   updateCellsToMatchProblem() {
     for (let i = 0; i < this.cells.length; i++)
       for (let j = 0; j < this.cells[i].length; j++)
@@ -138,5 +173,18 @@ export class ProblemComponent implements OnInit {
     for (let index of this.problem.route.MOVES) {
       this.updateCells(parseInt(index), 'MOVES');
     }
+
+    for (let color of this.problem.route.RGB) {
+      this.updateCells(color.index, 'RGB', this.rgbToHex(color.r, color.g, color.b));
+    }
+
+  }
+
+  startDrawing() {
+    this.isDrawing = true;
+  }
+
+  endDrawing() {
+    this.isDrawing = false;
   }
 }

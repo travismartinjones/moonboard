@@ -3,26 +3,17 @@ import { ProblemsService } from '../services/problems.service';
 import { ModeService } from '../services/mode.service';
 
 @Component({
-  selector: 'app-nav-menu',
-  templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.css']
+  selector: 'footer',
+  templateUrl: './footer.component.html',
+  styleUrls: ['./footer.component.css']
 })
-export class NavMenuComponent {
-  isExpanded = false;
+export class FooterComponent {
   holdSetup: string;
 
   constructor(
     private modeService: ModeService
   ) {
     this.holdSetup = this.modeService.getHoldSetup();
-  }
-
-  collapse() {
-    this.isExpanded = false;
-  }
-
-  toggle() {
-    this.isExpanded = !this.isExpanded;
   }
 
   updateHoldSetup(setup: string) {

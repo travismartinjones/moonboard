@@ -75,7 +75,7 @@ namespace frontend.Controllers
 
         [HttpGet]
         [Route("search")]
-        public List<Problem> Get([FromQuery]string name, [FromQuery]string min, [FromQuery]string max)
+        public List<Problem> Get([FromQuery]string name, [FromQuery]string min, [FromQuery]string max, [FromQuery]string setup)
         {
             using (var db = new LiteDatabase(DatabaseFilename))
             {
@@ -93,6 +93,8 @@ namespace frontend.Controllers
                 for (var i = minInt; i <= maxInt; i++)
                     difficulties.Add("V" + i);
                 query = query.Where(x => difficulties.Contains(x.Difficulty));
+
+                query = query.Where(x => x.Setup == setup);
 
                 return query.OrderBy(x => x.Name).ToList();
             }

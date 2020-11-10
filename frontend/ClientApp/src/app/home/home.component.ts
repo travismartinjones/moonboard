@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Problem, Route } from '../problem';
 import { ProblemsService } from '../services/problems.service';
 import { VDifficultyFormatter } from '../vdifficultyformatter';
 import { Router } from '@angular/router';
+import { EventAggregatorService } from '../services/event-aggregator.service';
+import { ModeService } from '../services/mode.service';
 
 @Component({
   selector: 'app-home',
@@ -28,13 +30,21 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private problemsService: ProblemsService,
-    private router: Router
+    private eventAggregator: EventAggregatorService,
+    private modeService: ModeService,
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
-
+    eventAggregator.subscribe('holdSetupChangedEvent', setup => {
+      this.search();
+      this.selectedProblem = new Problem();
+      this.changeDetectorRef.detectChanges();
+    }, this);
   }
 
   ngOnInit() {
     this.search();
+    this.selectedProblem = new Problem();
   }
 
   search(delay: number = 1000) {
@@ -43,13 +53,17 @@ export class HomeComponent implements OnInit {
     }
 
     this.timeout = window.setTimeout(() => {
-      this.problemsService.search(this.name, "V"+this.difficultyRange[0], "V"+this.difficultyRange[1], this.setter).then(results => {
+      this.problemsService.search(this.name, "V" + this.difficultyRange[0], "V" + this.difficultyRange[1], this.setter, this.modeService.getHoldSetup()).then(results => {
         this.problems = results;
       });
     }, delay);
   }
 
   selectProblem(problem: Problem) {
+    if (this.selectedProblem === problem) {
+      this.selectedProblem = new Problem();
+      return;
+    }
     this.selectedProblem = problem;
   }
 

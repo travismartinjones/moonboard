@@ -123,13 +123,19 @@ class MoonBoard:
 
     def show_problem(self, holds, hold_colors={}):
         self.clear()
-        for k in ['START', 'MOVES', 'TOP', 'FEET']:
+        for k in ['START', 'MOVES', 'TOP', 'FEET', 'RGB']:
             if k in holds:
                 for hold in holds[k]:
-                    self.set_hold(
-                        hold, 
-                        hold_colors.get(k, self.DEFAULT_PROBLEM_COLORS[k]),
-                    )
+                    if k == 'RGB'
+                        self.set_hold(
+                            hold.index, 
+                            (hold.r, hold.g, hold.b),
+                        )
+                    else
+                        self.set_hold(
+                            hold, 
+                            hold_colors.get(k, self.DEFAULT_PROBLEM_COLORS[k]),
+                        )
         self.layout.push_to_driver()
 
     def run_animation(self, animation, run_options={}, **kwds):

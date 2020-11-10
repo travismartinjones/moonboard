@@ -6,18 +6,22 @@ import { RouterModule } from '@angular/router';
 import { NouisliderModule } from 'ng2-nouislider';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
+import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { ProblemComponent } from './problem/problem.component';
 import { AddProblemComponent } from './add-problem/add-problem.component';
 import { EditProblemComponent } from './edit-problem/edit-problem.component';
 import { LedsService } from './services/leds.service';
 import { ProblemsService } from './services/problems.service';
+import { EventAggregatorService } from './services/event-aggregator.service';
+import { ModeService } from './services/mode.service';
 import { VDifficultyFormatter } from './vdifficultyformatter';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
+    FooterComponent,
     HomeComponent,
     ProblemComponent,
     AddProblemComponent,
@@ -38,7 +42,9 @@ import { VDifficultyFormatter } from './vdifficultyformatter';
   providers: [
     LedsService,
     ProblemsService,
-    VDifficultyFormatter],
+    VDifficultyFormatter,
+    ModeService,
+    EventAggregatorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

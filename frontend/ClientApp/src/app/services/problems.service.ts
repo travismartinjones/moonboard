@@ -4,6 +4,7 @@ import { Problem } from "../problem";
 
 @Injectable()
 export class ProblemsService {
+
   constructor(
     private httpClient: HttpClient,
     @Inject('BASE_URL') private baseUrl: string
@@ -34,9 +35,9 @@ export class ProblemsService {
   }
 
 
-  search(name: string, min: string, max: string, setter: string): Promise<Problem[]> {
+  search(name: string, min: string, max: string, setter: string, setup: string): Promise<Problem[]> {
     return new Promise<Problem[]>((resolve, reject) => {
-      this.httpClient.get(this.baseUrl + 'problems/search?name=' + (name ? name : '') + '&min=' + (min ? min : '') + '&max=' + (max ? max : '') + '&setter=' + (setter ? setter : '')).subscribe(
+      this.httpClient.get(this.baseUrl + 'problems/search?name=' + (name ? name : '') + '&min=' + (min ? min : '') + '&max=' + (max ? max : '') + '&setter=' + (setter ? setter : '') + '&setup=' + setup).subscribe(
         result => { resolve(result as Problem[]); },
         error => { reject(); });
     });
@@ -49,5 +50,4 @@ export class ProblemsService {
         error => { reject(); });
     });
   }
-
 }

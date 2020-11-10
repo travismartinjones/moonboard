@@ -18,6 +18,7 @@ namespace frontend
             if (name == "MOVES") return name;
             if (name == "TOP") return name;
             if (name == "START") return name;
+            if (name == "RGB") return name;
             return JsonNamingPolicy.CamelCase.ConvertName(name);
         }
     }

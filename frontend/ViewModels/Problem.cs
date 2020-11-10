@@ -7,5 +7,6 @@
         public string Setter { get; set; }
         public string Notes { get; set; }
         public Route Route { get; set; }
+        public string Setup { get; set; }
     }
 }

@@ -126,12 +126,12 @@ class MoonBoard:
         for k in ['START', 'MOVES', 'TOP', 'FEET', 'RGB']:
             if k in holds:
                 for hold in holds[k]:
-                    if k == 'RGB'
+                    if k == 'RGB':
                         self.set_hold(
                             hold.index, 
                             (hold.r, hold.g, hold.b),
                         )
-                    else
+                    else:
                         self.set_hold(
                             hold, 
                             hold_colors.get(k, self.DEFAULT_PROBLEM_COLORS[k]),

@@ -79,7 +79,8 @@ export class AddProblemComponent implements OnInit {
     if (this.problem.route.FEET.length +
       this.problem.route.MOVES.length +
       this.problem.route.START.length +
-      this.problem.route.TOP.length < 3) {
+      this.problem.route.TOP.length +
+      this.problem.route.RGB.length <3) {
       this.problemError = "You must enter a valid route for the boulder.";
       this.isProblemInvalid = true;
     } else {

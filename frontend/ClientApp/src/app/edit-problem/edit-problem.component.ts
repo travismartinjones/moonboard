@@ -46,6 +46,12 @@ export class EditProblemComponent implements OnInit {
       this.isArt = problem.setup === "Art";
       this.difficulty = parseInt(this.problem.difficulty.replace("V", ""));
     });
+    this.hueb = new Huebee('.color-input', {
+      notation: 'hex'
+    });
+    this.hueb.on('change', color => {
+      this.setColor(color);
+    });
   }
 
   selectDifficulty(value: string) {
@@ -54,10 +60,6 @@ export class EditProblemComponent implements OnInit {
 
   updateDifficulty(difficulty: number) {
     this.difficulty = difficulty;
-  }
-
-  toggleIsArt() {
-    this.isArt = !this.isArt;
   }
 
   updateProblem() {
@@ -69,7 +71,8 @@ export class EditProblemComponent implements OnInit {
     if (this.problem.route.FEET.length +
       this.problem.route.MOVES.length +
       this.problem.route.START.length +
-      this.problem.route.TOP.length < 3) {
+      this.problem.route.TOP.length +
+      this.problem.route.RGB.length < 3) {
       this.problemError = "You must enter a valid route for the boulder.";
       this.isProblemInvalid = true;
     } else {
@@ -85,5 +88,16 @@ export class EditProblemComponent implements OnInit {
 
   onProblemChanged(updatedProblem: Problem) {
     this.problem = updatedProblem;
+  }
+
+  setColor(hex: string) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    var rgb = {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16),
+      hex: hex
+    };
+    this.currentColor = rgb;
   }
 }

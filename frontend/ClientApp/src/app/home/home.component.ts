@@ -38,7 +38,6 @@ export class HomeComponent implements OnInit {
     eventAggregator.subscribe('holdSetupChangedEvent', setup => {
       this.search();
       this.selectedProblem = new Problem();
-      this.changeDetectorRef.detectChanges();
     }, this);
   }
 

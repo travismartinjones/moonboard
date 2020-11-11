@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, OnChanges, SimpleChange, EventEmitter
 import { Problem, Route } from '../problem';
 import { LedsService } from '../services/leds.service';
 import { Color } from '../color';
+import { EventAggregatorService } from '../services/event-aggregator.service';
+import { ModeService } from '../services/mode.service';
 
 class Cell {
   index: number;
@@ -19,7 +21,7 @@ export class ProblemComponent implements OnInit {
   @Input() problem: Problem;
   @Input() readonly: boolean;
   @Input() artColor: Color;
-  @Input() isArt: boolean;
+  isArt: boolean;
   @Output() onProblemChanged: EventEmitter<Problem> = new EventEmitter<Problem>();
 
   cells: Cell[][];
@@ -28,14 +30,20 @@ export class ProblemComponent implements OnInit {
   isDrawing: boolean = false;
 
   constructor(
-    private ledsService: LedsService
+    private eventAggregator: EventAggregatorService,
+    private ledsService: LedsService,
+    private modeService: ModeService
   ) {
+    this.isArt = modeService.getHoldSetup() === 'Art';
+    eventAggregator.subscribe('holdSetupChangedEvent', setup => {
+      this.isArt = setup === 'Art';
+    }, this);
+
     this.problem = new Problem();
 
     this.cells = [];
     for (let i = 0; i < this.rows; i++)
       this.cells[i] = [];
-
     let light = false;
     let hold = false;
     let lightIndex = 0;
@@ -93,9 +101,11 @@ export class ProblemComponent implements OnInit {
   }
 
   onHoldTouched(index: number) {
+
+    if (index < 0) return; // gap pressed
+
     const indexString = index.toString();
     this.problem.route.RGB = this.problem.route.RGB.filter(x => x.index !== indexString);
-
 
     if (this.artColor.r != 0 || this.artColor.g != 0 || this.artColor.b != 0) {
       this.problem.route.RGB.push({
@@ -177,11 +187,9 @@ export class ProblemComponent implements OnInit {
     for (let index of this.problem.route.MOVES) {
       this.updateCells(parseInt(index), 'MOVES', '');
     }
-
     for (let color of this.problem.route.RGB) {
       this.updateCells(parseInt(color.index), 'RGB', this.rgbToHex(color.r, color.g, color.b));
     }
-
   }
 
   startDrawing() {

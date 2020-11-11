@@ -2,7 +2,7 @@
     <p>Add Problem</p>
     <div class="row mb-3">
         <div class="col-sm-6">
-            <problem [readonly]="false" [class.is-invalid]="isProblemInvalid" [problem]="problem" [isArt]="isArt" [artColor]="currentColor" (onProblemChanged)="onProblemChanged($event)"></problem>
+            <problem [readonly]="false" [class.is-invalid]="isProblemInvalid" [problem]="problem" [artColor]="currentColor" (onProblemChanged)="onProblemChanged($event)"></problem>
             <div class="invalid-feedback">
                 {{problemError}}
             </div>

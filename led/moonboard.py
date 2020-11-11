@@ -128,10 +128,9 @@ class MoonBoard:
                 for hold in holds[k]:
                     if k == 'RGB':
                         self.set_hold(
-                            hold.index, 
-                            (hold.r, hold.g, hold.b),
+                            hold['Index'], 
+                            (hold['R'], hold['G'], hold['B']),
                         )
-                        print(hold)
                     else:
                         self.set_hold(
                             hold, 

@@ -1,5 +1,5 @@
 <div>
-    <table class="problem" (mousedown)="startDrawing()" (mouseup)="endDrawing()">
+    <table class="problem" (mousedown)="startDrawing()" (mouseleave)="endDrawing()" (mouseup)="endDrawing()">
         <tr *ngFor="let row of cells; let i = index">
             <td *ngFor="let column of row" style="text-align: center; vertical-align: middle">
                 <div>

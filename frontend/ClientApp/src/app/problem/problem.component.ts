@@ -104,9 +104,12 @@ export class ProblemComponent implements OnInit {
         g: this.artColor.g,
         b: this.artColor.b
       });
+
+      this.updateCells(index, 'RGB', this.artColor.hex);
+    } else {
+      this.updateCells(index, 'RGB', '');
     }
 
-    this.updateCells(index, 'RGB', this.artColor.hex);
 
     this.ledsService.showRoute(this.problem.route);
   }

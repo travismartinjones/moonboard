@@ -12,8 +12,9 @@
                          [class.MOVES]="column.holdType === 'MOVES'"
                          [class.TOP]="column.holdType === 'TOP'"
                          (mouseenter)="isArt && isDrawing ? onHoldTouched(column.index) : null"
-                         (click)="isArt ? onHoldTouched(column.index) : onHoldSelected(column.index)"
-                         [style.background-color]="isArt && column.holdType === 'RGB' ? column.color : 'inherit'"
+                         (mousedown)="isArt ? onHoldTouched(column.index) : null"
+                         (click)="isArt ? null : onHoldSelected(column.index)"
+                         [style.background-color]="isArt && column.holdType === 'RGB' ? column.color : ''"
                          ></div>
                     <div *ngIf="column.type == 'light'"
                          class="light-container">

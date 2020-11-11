@@ -1,6 +1,7 @@
 .problem {
   background-color: #EEE;
   border: solid 2px #CCC;
+  touch-action: none;
 }
 
 .hold {

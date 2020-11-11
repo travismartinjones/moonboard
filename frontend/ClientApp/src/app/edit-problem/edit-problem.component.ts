@@ -5,6 +5,7 @@ import { VDifficultyFormatter } from '../vdifficultyformatter';
 import { ProblemsService } from '../services/problems.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Color } from '../color';
+declare var Huebee: any;
 
 @Component({
   selector: 'edit-problem',
@@ -18,6 +19,7 @@ export class EditProblemComponent implements OnInit {
   isDifficultyInvalid: boolean;
   isProblemInvalid: boolean;
   isArt: boolean = false;
+  hueb: any;
   currentColor: Color = { r: 0, g: 0, b: 0, hex: '#000' };
   problemError: string;
   id: string;

@@ -131,6 +131,7 @@ class MoonBoard:
                             hold.index, 
                             (hold.r, hold.g, hold.b),
                         )
+                        print(hold)
                     else:
                         self.set_hold(
                             hold, 

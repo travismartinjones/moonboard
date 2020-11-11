@@ -25,7 +25,7 @@ export class AddProblemComponent implements OnInit {
   problemError: string;
   problem: Problem;
   hueb: any;
-  currentColor: Color = { r: 0, g: 0, b: 0};
+  currentColor: Color = { r: 0, g: 0, b: 0, hex: '#000' };
   sliderConfig: any = {
     step: 1,
     connect: 'lower',

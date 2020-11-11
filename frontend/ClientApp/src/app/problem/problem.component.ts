@@ -44,7 +44,7 @@ export class ProblemComponent implements OnInit {
     for (let column = 0; column < this.columns; column++) {
       for (let row = 0; row < this.rows; row++) {
         if (column % 2 === 0 && (row === 0 || row === this.rows - 1)) {
-          this.cells[row][column] = { index: -1, type: 'gap', holdType: '' };
+          this.cells[row][column] = { index: -1, type: 'gap', holdType: '', color: '' };
           if (row === this.rows - 1) {
             flipIndex = !flipIndex;
           }
@@ -63,7 +63,7 @@ export class ProblemComponent implements OnInit {
         }
 
         const index = flipIndex ? (this.rows - row - 1) : row;
-        this.cells[index][column] = { index: lightIndex, type: hold ? (flipIndex ? 'hold' : 'light') : (light ? (flipIndex ? 'light' : 'hold') : 'gap'), holdType: '' };
+        this.cells[index][column] = { index: lightIndex, type: hold ? (flipIndex ? 'hold' : 'light') : (light ? (flipIndex ? 'light' : 'hold') : 'gap'), holdType: '', color: '' };
 
         if (row === this.rows - 1) {
           flipIndex = !flipIndex;
@@ -93,12 +93,13 @@ export class ProblemComponent implements OnInit {
   }
 
   onHoldTouched(index: number) {
-    this.problem.route.RGB = this.problem.route.RGB.filter(x => x.index !== index);
+    const indexString = index.toString();
+    this.problem.route.RGB = this.problem.route.RGB.filter(x => x.index !== indexString);
 
 
     if (this.artColor.r != 0 || this.artColor.g != 0 || this.artColor.b != 0) {
       this.problem.route.RGB.push({
-        index: index,
+        index: indexString,
         r: this.artColor.r,
         g: this.artColor.g,
         b: this.artColor.b
@@ -147,13 +148,13 @@ export class ProblemComponent implements OnInit {
         }
   }
 
-  componentToHex(c: string): string {
+  componentToHex(c: number): string {
     var hex = c.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
   }
 
   rgbToHex(r: number, g: number, b: number): string {
-    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
   }
 
   updateCellsToMatchProblem() {
@@ -162,20 +163,20 @@ export class ProblemComponent implements OnInit {
         this.cells[i][j].holdType = '';
 
     for (let index of this.problem.route.START) {
-      this.updateCells(parseInt(index), 'START');
+      this.updateCells(parseInt(index), 'START', '');
     }
     for (let index of this.problem.route.FEET) {
-      this.updateCells(parseInt(index), 'FEET');
+      this.updateCells(parseInt(index), 'FEET', '');
     }
     for (let index of this.problem.route.TOP) {
-      this.updateCells(parseInt(index), 'TOP');
+      this.updateCells(parseInt(index), 'TOP', '');
     }
     for (let index of this.problem.route.MOVES) {
-      this.updateCells(parseInt(index), 'MOVES');
+      this.updateCells(parseInt(index), 'MOVES', '');
     }
 
     for (let color of this.problem.route.RGB) {
-      this.updateCells(color.index, 'RGB', this.rgbToHex(color.r, color.g, color.b));
+      this.updateCells(parseInt(color.index), 'RGB', this.rgbToHex(color.r, color.g, color.b));
     }
 
   }

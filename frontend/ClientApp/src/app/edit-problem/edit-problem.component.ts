@@ -18,7 +18,7 @@ export class EditProblemComponent implements OnInit {
   isDifficultyInvalid: boolean;
   isProblemInvalid: boolean;
   isArt: boolean = false;
-  currentColor: Color = { r: 0, g: 0, b: 0 };
+  currentColor: Color = { r: 0, g: 0, b: 0, hex: '#000' };
   problemError: string;
   id: string;
   problem: Problem;

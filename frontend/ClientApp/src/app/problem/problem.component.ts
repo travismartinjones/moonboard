@@ -22,12 +22,13 @@ export class ProblemComponent implements OnInit {
   @Input() readonly: boolean;
   @Input() artColor: Color;
   isArt: boolean;
+  isLighting: boolean = true;
   @Output() onProblemChanged: EventEmitter<Problem> = new EventEmitter<Problem>();
 
   cells: Cell[][];
   columns: number = 23;
   rows: number = 36;
-  isDrawing: boolean = false;
+  isDrawing: boolean;
   setup: string;
 
   constructor(
@@ -41,6 +42,8 @@ export class ProblemComponent implements OnInit {
       this.setup = setup;
       this.isArt = this.setup === 'Art';
     }, this);
+
+    this.isLighting = localStorage.getItem('isLighting') !== 'false';
 
     this.problem = new Problem();
 
@@ -99,7 +102,10 @@ export class ProblemComponent implements OnInit {
     if (!this.problem || !this.problem.route) {
       return;
     }
-    this.ledsService.showRoute(this.problem.route);
+
+    if (this.isLighting) {
+      this.ledsService.showRoute(this.problem.route);
+    }
     this.updateCellsToMatchProblem();
   }
 
@@ -123,8 +129,9 @@ export class ProblemComponent implements OnInit {
       this.updateCells(index, 'RGB', '');
     }
 
-
-    this.ledsService.showRoute(this.problem.route);
+    if (this.isLighting) {
+      this.ledsService.showRoute(this.problem.route);
+    }
   }
 
   onHoldSelected(index: number) {
@@ -152,7 +159,9 @@ export class ProblemComponent implements OnInit {
       this.updateCells(index, 'START', '');
     }
 
-    this.ledsService.showRoute(this.problem.route);
+    if (this.isLighting) {
+      this.ledsService.showRoute(this.problem.route);
+    }
   }
 
   updateCells(index: number, holdType: string, color: string) {
@@ -201,5 +210,10 @@ export class ProblemComponent implements OnInit {
 
   endDrawing() {
     this.isDrawing = false;
+  }
+
+  toggleLighting() {
+    this.isLighting = !this.isLighting;
+    localStorage.setItem('isLighting', this.isLighting ? 'true' : 'false');
   }
 }

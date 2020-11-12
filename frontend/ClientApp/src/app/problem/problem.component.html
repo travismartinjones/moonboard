@@ -3,8 +3,7 @@
         <tr *ngFor="let row of cells; let i = index">
             <td *ngFor="let column of row" style="text-align: center; vertical-align: middle">
                 <div>
-                    <div
-                         *ngIf="column.type !== 'light'"
+                    <div *ngIf="column.type !== 'light'"
                          class="hold"
                          [class.hold]="column.type == 'hold'"
                          [class.gap]="column.type == 'gap'"
@@ -15,18 +14,18 @@
                          (mouseenter)="isArt && isDrawing ? onHoldTouched(column.index) : null"
                          (mousedown)="isArt ? onHoldTouched(column.index) : null"
                          (click)="isArt ? null : onHoldSelected(column.index)"
-                         [style.background-color]="isArt && column.holdType === 'RGB' ? column.color : ''"
-                         ></div>
+                         [style.background-color]="isArt && column.holdType === 'RGB' ? column.color : ''"></div>
                     <div *ngIf="column.type == 'light'"
                          class="light-container">
                         <div class="light"
-                         [class.FEET]="column.holdType === 'FEET'"
-                         [class.START]="column.holdType === 'START'"
-                         [class.MOVES]="column.holdType === 'MOVES'"
-                         [class.TOP]="column.holdType === 'TOP'"></div>
+                             [class.FEET]="column.holdType === 'FEET'"
+                             [class.START]="column.holdType === 'START'"
+                             [class.MOVES]="column.holdType === 'MOVES'"
+                             [class.TOP]="column.holdType === 'TOP'"></div>
                     </div>
                 </div>
             </td>
         </tr>
     </table>
 </div>
+<i class="fa fa-lightbulb-o lightbulb-button" aria-hidden="true" [class.isLighting]="isLighting" (click)="toggleLighting()"></i>

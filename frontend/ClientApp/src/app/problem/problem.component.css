@@ -112,3 +112,14 @@
   content: " ";
   display: block;
 }
+
+.lightbulb-button.isLighting {
+  color: #DDD;
+}
+
+.lightbulb-button {
+    color: #555;
+    position: absolute;
+    margin-top: -20px;
+    margin-left: 5px;
+}

@@ -1,38 +1,41 @@
 .problem {
-  background-color: #EEE;
   border: solid 2px #CCC;
   touch-action: none;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.Nov2020 {
+  background-image: url(/assets/layouts/Nov2020.jpg);
+}
+
+.Art {
+    background-color: #222;
 }
 
 .hold {
   max-width: calc( 90vh / 36);
   max-height: calc( 90vh / 36);
-  background-color: #EEE;
   width: calc( 90vw / 27 );
   height: calc( 90vw / 27 );
-  border-style: solid;
-  border-width: 1px;
   border-radius: calc( 90vw / 54 );
 }
 
 .light-container {
   max-width: calc( 90vh / 36);
   max-height: calc( 90vh / 36);
-  background-color: #EEE;
   width: calc( 90vw / 27 );
   height: calc( 90vw / 27 );
 }
 
+.Art .hold {
+  border-style: solid;
+  border-width: 1px;
+  border-color: #777;
+}
+
 .light {
-  max-width: 4px;
-  max-height: 4px;
-  top: calc(50% - 90vw / 300);
-  left: calc(50% - 90vw / 300);
-  position: relative;
-  background-color: #DDD;
-  height: calc( 90vw / 150 );
-  width: calc( 90vw / 150 );
-  border-radius: calc( (90vw) / 216 );
+    visibility: hidden;
 }
 
 .gap {
@@ -42,22 +45,70 @@
   width: calc( 90vw / 27 );
 }
 
-.problem .FEET {
-    border-color: orange;
-    background-color: peachpuff;
+.problem .FEET:after {
+  border-color: #fcce03;
+  background-color: #fcce0333;
+  border-style: solid;
+  border-width: 3px;
+  position: relative;
+  max-height: 45px;
+  max-width: 45px;
+  width: calc( 90vw / 18 );
+  height: calc( 90vw / 18 );
+  top: calc( 90vw / -72 );
+  left: calc( 90vw / -72 );
+  border-radius: calc( 90vw / 9 );
+  content: " ";
+  display: block;
 }
 
-.problem .START {
-  border-color: green;
-  background-color: lightgreen;
+.problem .START:after {
+  border-color: #03fc77;
+  background-color: #03fc7733;
+  border-style: solid;
+  border-width: 3px;
+  position: relative;
+  max-height: 45px;
+  max-width: 45px;
+  width: calc( 90vw / 18 );
+  height: calc( 90vw / 18 );
+  top: calc( 90vw / -72 );
+  left: calc( 90vw / -72 );
+  border-radius: calc( 90vw / 9 );
+  content: " ";
+  display: block;
 }
 
-.problem .TOP {
-  border-color: red;
-  background-color: pink;
+.problem .TOP:after {
+  border-color: #fc03df;
+  background-color: #fc03df33;
+  border-style: solid;
+  border-width: 3px;
+  position: relative;
+  max-height: 45px;
+  max-width: 45px;
+  width: calc( 90vw / 18 );
+  height: calc( 90vw / 18 );
+  top: calc( 90vw / -72 );
+  left: calc( 90vw / -72 );
+  border-radius: calc( 90vw / 9 );
+  content: " ";
+  display: block;
 }
 
-.problem .MOVES {
-  border-color: blue;
-  background-color: lightblue;
+.problem .MOVES:after {
+  border-color: #03dffc;
+  background-color: #03dffc33;
+  border-style: solid;
+  border-width: 3px;
+  position: relative;
+  max-height: 45px;
+  max-width: 45px;
+  width: calc( 90vw / 18 );
+  height: calc( 90vw / 18 );
+  top: calc( 90vw / -72 );
+  left: calc( 90vw / -72 );
+  border-radius: calc( 90vw / 9 );
+  content: " ";
+  display: block;
 }

@@ -28,15 +28,18 @@ export class ProblemComponent implements OnInit {
   columns: number = 23;
   rows: number = 36;
   isDrawing: boolean = false;
+  setup: string;
 
   constructor(
     private eventAggregator: EventAggregatorService,
     private ledsService: LedsService,
     private modeService: ModeService
   ) {
-    this.isArt = modeService.getHoldSetup() === 'Art';
+    this.setup = modeService.getHoldSetup();
+    this.isArt = this.setup === 'Art';
     eventAggregator.subscribe('holdSetupChangedEvent', setup => {
-      this.isArt = setup === 'Art';
+      this.setup = setup;
+      this.isArt = this.setup === 'Art';
     }, this);
 
     this.problem = new Problem();

@@ -33,7 +33,7 @@
         </table>
         </div>
     <problem [readonly]="true" [problem]="selectedProblem" (onProblemChanged)="onProblemChanged($event)"></problem>
-    <div class="mt-2 mb-2">
-        <button *ngIf="selectedProblem && !selectedProblem.isNew" type="submit" class="btn btn-primary col-sm-2" (click)="edit()">Edit</button><button *ngIf="selectedProblem && !selectedProblem.isNew" type="submit" (click)="delete()" class="btn btn-danger col-sm-2 ml-sm-2">Delete</button>
+    <div class="mt-2">
+        <button *ngIf="selectedProblem && !selectedProblem.isNew" type="submit" class="btn btn-primary col-sm-2 mb-2" (click)="edit()">Edit</button><button *ngIf="selectedProblem && !selectedProblem.isNew" type="submit" (click)="delete()" class="btn btn-danger col-sm-2 ml-sm-2  mb-2">Delete</button>
     </div>
 </div>

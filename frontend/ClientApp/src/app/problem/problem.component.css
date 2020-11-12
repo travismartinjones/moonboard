@@ -1,6 +1,5 @@
 .problem {
   border: solid 2px #CCC;
-  touch-action: none;
   background-size: contain;
   background-repeat: no-repeat;
 }

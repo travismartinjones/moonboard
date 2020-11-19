@@ -84,7 +84,7 @@ export class EditProblemComponent implements OnInit {
     if (this.isNameInvalid || this.isSetterNameInvalid || this.isDifficultyInvalid || this.isProblemInvalid) return;
 
     this.problemsService.updateProblem(this.problem).then(() => {
-      this.router.navigate(['/']);
+      this.router.navigate(['/'], { queryParams: { id: this.problem.id } });
     });
   }
 

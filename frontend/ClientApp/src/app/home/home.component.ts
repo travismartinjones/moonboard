@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Problem, Route } from '../problem';
 import { ProblemsService } from '../services/problems.service';
 import { VDifficultyFormatter } from '../vdifficultyformatter';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { EventAggregatorService } from '../services/event-aggregator.service';
 import { ModeService } from '../services/mode.service';
 
@@ -13,6 +13,7 @@ import { ModeService } from '../services/mode.service';
 })
 export class HomeComponent implements OnInit {
   selectedProblem: Problem;
+  setProblemOnLoadId: string;
   name: string = "";
   difficultyRange: number[] = [0, 10];
   setter: string = "";
@@ -33,17 +34,21 @@ export class HomeComponent implements OnInit {
     private eventAggregator: EventAggregatorService,
     private modeService: ModeService,
     private router: Router,
+    private route: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef
   ) {
     eventAggregator.subscribe('holdSetupChangedEvent', setup => {
       this.search();
       this.selectedProblem = new Problem();
     }, this);
+
+    route.queryParams.subscribe(params => {
+      this.setProblemOnLoadId = params['id'];
+    });
   }
 
   ngOnInit() {
     this.search();
-    this.selectedProblem = new Problem();
   }
 
   search(delay: number = 1000) {
@@ -54,6 +59,16 @@ export class HomeComponent implements OnInit {
     this.timeout = window.setTimeout(() => {
       this.problemsService.search(this.name, "V" + this.difficultyRange[0], "V" + this.difficultyRange[1], this.setter, this.modeService.getHoldSetup()).then(results => {
         this.problems = results;
+        if (this.setProblemOnLoadId) {
+          let matching = results.filter(x => x.id === this.setProblemOnLoadId);
+          if (matching.length > 0) {
+            this.selectedProblem = matching[0];
+            this.setProblemOnLoadId = null;
+            return;
+          }
+          this.selectedProblem = new Problem();
+
+        }
       });
     }, delay);
   }

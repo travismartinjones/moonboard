@@ -13,18 +13,18 @@
 }
 
 .hold {
-  max-width: calc( 90vh / 36);
-  max-height: calc( 90vh / 36);
-  width: calc( 90vw / 27 );
-  height: calc( 90vw / 27 );
-  border-radius: calc( 90vw / 54 );
+  max-width: calc( min(90vw, 1000px) / 36);
+  max-height: calc( min(90vw, 1000px) / 36);
+  width: calc( min(90vw, 1000px) / 27 );
+  height: calc( min(90vw, 1000px) / 27 );
+  border-radius: calc( min(90vw, 1000px) / 54 );
 }
 
 .light-container {
-  max-width: calc( 90vh / 36);
-  max-height: calc( 90vh / 36);
-  width: calc( 90vw / 27 );
-  height: calc( 90vw / 27 );
+  max-width: calc( min(90vw, 1000px) / 36);
+  max-height: calc( min(90vw, 1000px) / 36);
+  width: calc( min(90vw, 1000px) / 27 );
+  height: calc( min(90vw, 1000px) / 27 );
 }
 
 .Art .hold {
@@ -38,10 +38,10 @@
 }
 
 .gap {
-  max-width: calc( 90vh / 36);
-  max-height: calc( 90vh / 36);
-  height: calc( 90vw / 27 );
-  width: calc( 90vw / 27 );
+  max-width: calc( min(90vw, 1000px) / 36);
+  max-height: calc( min(90vw, 1000px) / 36);
+  height: calc( min(90vw, 1000px) / 27 );
+  width: calc( min(90vw, 1000px) / 27 );
 }
 
 .problem .FEET:after {
@@ -52,11 +52,11 @@
   position: relative;
   max-height: 45px;
   max-width: 45px;
-  width: calc( 90vw / 18 );
-  height: calc( 90vw / 18 );
-  top: calc( 90vw / -72 );
-  left: calc( 90vw / -72 );
-  border-radius: calc( 90vw / 9 );
+  width: calc( min(90vw, 1000px) / 18 );
+  height: calc( min(90vw, 1000px) / 18 );
+  top: calc( min(90vw, 1000px) / -72 );
+  left: calc( min(90vw, 1000px) / -72 );
+  border-radius: calc( min(90vw, 1000px) / 9 );
   content: " ";
   display: block;
 }
@@ -69,11 +69,11 @@
   position: relative;
   max-height: 45px;
   max-width: 45px;
-  width: calc( 90vw / 18 );
-  height: calc( 90vw / 18 );
-  top: calc( 90vw / -72 );
-  left: calc( 90vw / -72 );
-  border-radius: calc( 90vw / 9 );
+  width: calc( min(90vw, 1000px) / 18 );
+  height: calc( min(90vw, 1000px) / 18 );
+  top: calc( min(90vw, 1000px) / -72 );
+  left: calc( min(90vw, 1000px) / -72 );
+  border-radius: calc( min(90vw, 1000px) / 9 );
   content: " ";
   display: block;
 }
@@ -86,11 +86,11 @@
   position: relative;
   max-height: 45px;
   max-width: 45px;
-  width: calc( 90vw / 18 );
-  height: calc( 90vw / 18 );
-  top: calc( 90vw / -72 );
-  left: calc( 90vw / -72 );
-  border-radius: calc( 90vw / 9 );
+  width: calc( min(90vw, 1000px) / 18 );
+  height: calc( min(90vw, 1000px) / 18 );
+  top: calc( min(90vw, 1000px) / -72 );
+  left: calc( min(90vw, 1000px) / -72 );
+  border-radius: calc( min(90vw, 1000px) / 9 );
   content: " ";
   display: block;
 }
@@ -103,11 +103,11 @@
   position: relative;
   max-height: 45px;
   max-width: 45px;
-  width: calc( 90vw / 18 );
-  height: calc( 90vw / 18 );
-  top: calc( 90vw / -72 );
-  left: calc( 90vw / -72 );
-  border-radius: calc( 90vw / 9 );
+  width: calc( min(90vw, 1000px) / 18 );
+  height: calc( min(90vw, 1000px) / 18 );
+  top: calc( min(90vw, 1000px) / -72 );
+  left: calc( min(90vw, 1000px) / -72 );
+  border-radius: calc( min(90vw, 1000px) / 9 );
   content: " ";
   display: block;
 }

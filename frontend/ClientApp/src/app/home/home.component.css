@@ -3,7 +3,7 @@
 
 .table-fixed {
   overflow-y: auto;
-  height: 200px;
+  height: 100vh;
 }
 
 .table-fixed thead th {

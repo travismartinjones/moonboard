@@ -16,7 +16,7 @@ export class ModeService {
   getHoldSetup(): string {
     let value = localStorage.getItem('holdSetup');
     if (!value) {
-      localStorage.setItem('holdSetup', 'Nov2020');
+      localStorage.setItem('holdSetup', 'Sep2021');
       value = localStorage.getItem('holdSetup');
     }
     return value;

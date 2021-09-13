@@ -23,7 +23,7 @@ export class Route {
 
 export class Problem {
 
-  static readonly currentSetup: string = "Nov2020";
+  static readonly currentSetup: string = "Sep2021";
   id: string;
   name: string;
   difficulty: string;

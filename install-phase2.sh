@@ -6,3 +6,7 @@ sudo /home/pi/moonboard/services/install_service.sh com.moonboard.service > /tmp
 
 # Remove phase 2 from boot
 sudo systemctl disable moonboard-install.service
+
+echo "Reinstalling bibliopixel and ws281x"
+sudo pip3 install bibliopixel
+sudo pip3 install rpi_ws281x

@@ -1,12 +1,57 @@
 .home {
+  width: 100%;
+  min-width: 0;
+}
+
+.difficulty-filter {
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .table-fixed {
-  overflow-y: auto;
-  height: 100vh;
+  overflow: auto;
+  max-height: 32vh;
+  margin-bottom: 1rem;
+}
+
+.table-fixed .table {
+  margin-bottom: 0;
+  table-layout: fixed;
+  width: 100%;
 }
 
 .table-fixed thead th {
   position: sticky;
-  top: -2px;
+  top: 0;
+  z-index: 1;
+}
+
+.problem-notes {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.problem-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.problem-actions .btn {
+  min-width: 5rem;
+}
+
+.table-fixed th,
+.table-fixed td {
+  padding: .5rem;
+  overflow-wrap: anywhere;
+}
+
+.table-fixed th:nth-child(2) {
+  width: 6.75rem;
+  white-space: nowrap;
+}
+
+.table-fixed th:nth-child(3) {
+  width: 25%;
 }

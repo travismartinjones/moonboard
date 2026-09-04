@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   name: string = "";
   difficultyRange: number[] = [0, 10];
   setter: string = "";
-  problems: Problem[];
+  problems: Problem[] = [];
   sliderConfig: any = {
     step: 1,
     connect: [false,true,false],
@@ -28,6 +28,7 @@ export class HomeComponent implements OnInit {
     tooltips: [new VDifficultyFormatter(),new VDifficultyFormatter()]
   };
   timeout: number;
+  private searchVersion: number = 0;
 
   constructor(
     private problemsService: ProblemsService,
@@ -38,8 +39,11 @@ export class HomeComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {
     eventAggregator.subscribe('holdSetupChangedEvent', setup => {
-      this.search();
+      this.problems = [];
       this.selectedProblem = new Problem();
+      this.selectedProblem.setup = setup;
+      this.setProblemOnLoadId = null;
+      this.search(0);
     }, this);
 
     route.queryParams.subscribe(params => {
@@ -48,16 +52,18 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.search();
+    this.search(0);
   }
 
   search(delay: number = 1000) {
+    const searchVersion = ++this.searchVersion;
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
 
     this.timeout = window.setTimeout(() => {
       this.problemsService.search(this.name, "V" + this.difficultyRange[0], "V" + this.difficultyRange[1], this.setter, this.modeService.getHoldSetup()).then(results => {
+        if (searchVersion !== this.searchVersion) return;
         this.problems = results;
         if (this.setProblemOnLoadId) {
           let matching = results.filter(x => x.id === this.setProblemOnLoadId);

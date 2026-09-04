@@ -1,31 +1,29 @@
 <div class="problem-container">
-    <table class="problem" [ngClass]="setup" (mousedown)="startDrawing()" (mouseleave)="endDrawing()" (mouseup)="endDrawing()">
-        <tr *ngFor="let row of cells; let i = index">
-            <td *ngFor="let column of row" style="text-align: center; vertical-align: middle">
-                <div>
-                    <div *ngIf="column.type !== 'light'"
-                         class="hold"
-                         [class.hold]="column.type == 'hold'"
-                         [class.gap]="column.type == 'gap'"
-                         [class.FEET]="column.holdType === 'FEET'"
-                         [class.START]="column.holdType === 'START'"
-                         [class.MOVES]="column.holdType === 'MOVES'"
-                         [class.TOP]="column.holdType === 'TOP'"
-                         (mouseenter)="isArt && isDrawing ? onHoldTouched(column.index) : null"
-                         (mousedown)="isArt ? onHoldTouched(column.index) : null"
-                         (click)="isArt ? null : onHoldSelected(column.index)"
-                         [style.background-color]="isArt && column.holdType === 'RGB' ? column.color : ''"></div>
-                    <div *ngIf="column.type == 'light'"
-                         class="light-container">
-                        <div class="light"
-                             [class.FEET]="column.holdType === 'FEET'"
-                             [class.START]="column.holdType === 'START'"
-                             [class.MOVES]="column.holdType === 'MOVES'"
-                             [class.TOP]="column.holdType === 'TOP'"></div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </table>
+    <div class="problem" [ngClass]="setup"
+         (mouseleave)="endDrawing()" (mouseup)="endDrawing()">
+        <ng-container *ngFor="let row of cells">
+            <div class="board-cell" *ngFor="let cell of row">
+                <button *ngIf="cell.type === 'hold'" type="button" class="hold"
+                        [disabled]="readonly || !problem || !problem.route"
+                        [attr.aria-label]="'Hold ' + (cell.index + 1) + (cell.holdType ? ': ' + cell.holdType : '')"
+                        [class.FEET]="cell.holdType === 'FEET'"
+                        [class.START]="cell.holdType === 'START'"
+                        [class.MOVES]="cell.holdType === 'MOVES'"
+                        [class.TOP]="cell.holdType === 'TOP'"
+                        [style.background-color]="isArt && cell.holdType === 'RGB' ? cell.color : ''"
+                        (mouseenter)="isArt && isDrawing ? onHoldTouched(cell.index) : null"
+                        (mousedown)="startDrawing(); isArt ? onHoldTouched(cell.index) : null"
+                        (click)="isArt ? ($event.detail === 0 ? onHoldTouched(cell.index) : null) : onHoldSelected(cell.index)">
+                </button>
+            </div>
+        </ng-container>
+    </div>
 </div>
-<i class="fa fa-lightbulb-o lightbulb-button" aria-hidden="true" [class.isLighting]="isLighting" (click)="toggleLighting()"></i>
+<div class="board-controls">
+    <button type="button" class="btn btn-outline-secondary lighting-button"
+            [class.active]="isLighting" [attr.aria-pressed]="isLighting"
+            (click)="toggleLighting()">
+        <i class="fa fa-lightbulb-o" aria-hidden="true"></i>
+        LEDs {{isLighting ? 'on' : 'off'}}
+    </button>
+</div>

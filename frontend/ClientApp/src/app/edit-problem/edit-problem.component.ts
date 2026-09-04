@@ -1,6 +1,5 @@
-import { Component, OnInit, Input, Output } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Problem } from "../problem";
-import { NouisliderModule } from 'ng2-nouislider';
 import { VDifficultyFormatter } from '../vdifficultyformatter';
 import { ProblemsService } from '../services/problems.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -13,6 +12,7 @@ declare var Huebee: any;
 })
 export class EditProblemComponent implements OnInit {
   error: string;
+  isLoading: boolean = true;
   difficulty: number = 0;
   isNameInvalid: boolean;
   isSetterNameInvalid: boolean;
@@ -20,7 +20,16 @@ export class EditProblemComponent implements OnInit {
   isProblemInvalid: boolean;
   isArt: boolean = false;
   hueb: any;
-  currentColor: Color = { r: 0, g: 0, b: 0, hex: '#000' };
+  hasHuebee: boolean = typeof Huebee === 'function';
+  currentColor: Color = { r: 0, g: 0, b: 0, hex: '#000000' };
+
+  @ViewChild('colorInput', { static: false })
+  set colorInput(input: ElementRef<HTMLInputElement>) {
+    if (!input || !this.hasHuebee || this.hueb) return;
+
+    this.hueb = new Huebee(input.nativeElement, { notation: 'hex' });
+    this.hueb.on('change', color => this.setColor(color));
+  }
   problemError: string;
   id: string;
   problem: Problem;
@@ -43,16 +52,27 @@ export class EditProblemComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (!this.id) {
+      this.error = 'Problem not found.';
+      this.isLoading = false;
+      return;
+    }
+
     this.problemsService.getById(this.id).then(problem => {
+      if (!problem || !problem.route) {
+        this.error = 'Problem not found.';
+        this.isLoading = false;
+        return;
+      }
+
       this.problem = problem;
-      this.isArt = problem.setup === "Art";
-      this.difficulty = parseInt(this.problem.difficulty.replace("V", ""));
-    });
-    this.hueb = new Huebee('.color-input', {
-      notation: 'hex'
-    });
-    this.hueb.on('change', color => {
-      this.setColor(color);
+      this.isArt = problem.setup === 'Art';
+      const difficulty = parseInt((problem.difficulty || '').replace('V', ''), 10);
+      this.difficulty = isNaN(difficulty) ? 0 : difficulty;
+      this.isLoading = false;
+    }).catch(() => {
+      this.error = 'Unable to load this problem. Please try again.';
+      this.isLoading = false;
     });
   }
 
@@ -65,6 +85,8 @@ export class EditProblemComponent implements OnInit {
   }
 
   updateProblem() {
+    if (!this.problem || this.isLoading) return;
+
     this.problem.difficulty = 'V' + this.difficulty;
     this.isNameInvalid = !this.problem.name;
     this.isSetterNameInvalid = !this.problem.setter;
@@ -93,13 +115,15 @@ export class EditProblemComponent implements OnInit {
   }
 
   setColor(hex: string) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    var rgb = {
+    const normalized = (hex || '').replace(/^#([a-f\d])([a-f\d])([a-f\d])$/i, '#$1$1$2$2$3$3');
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(normalized);
+    if (!result) return;
+
+    this.currentColor = {
       r: parseInt(result[1], 16),
       g: parseInt(result[2], 16),
       b: parseInt(result[3], 16),
-      hex: hex
+      hex: '#' + result[1] + result[2] + result[3]
     };
-    this.currentColor = rgb;
   }
 }

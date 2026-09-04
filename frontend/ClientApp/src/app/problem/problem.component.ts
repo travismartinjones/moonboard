@@ -39,8 +39,8 @@ export class ProblemComponent implements OnInit {
     this.setup = modeService.getHoldSetup();
     this.isArt = this.setup === 'Art';
     eventAggregator.subscribe('holdSetupChangedEvent', setup => {
-      this.setup = setup;
-      this.isArt = this.setup === 'Art';
+      this.updateSetup();
+      this.endDrawing();
     }, this);
 
     this.isLighting = localStorage.getItem('isLighting') !== 'false';
@@ -98,8 +98,16 @@ export class ProblemComponent implements OnInit {
     }
   }
 
+  updateSetup() {
+    this.setup = this.problem && !this.problem.isNew && this.problem.setup
+      ? this.problem.setup : this.modeService.getHoldSetup();
+    this.isArt = this.setup === 'Art';
+  }
+
   initialize() {
+    this.updateSetup();
     if (!this.problem || !this.problem.route) {
+      this.clearCells();
       return;
     }
 
@@ -111,7 +119,7 @@ export class ProblemComponent implements OnInit {
 
   onHoldTouched(index: number) {
 
-    if (index < 0) return; // gap pressed
+    if (index < 0 || this.readonly || !this.isArt || !this.problem || !this.problem.route || !this.artColor) return;
 
     const indexString = index.toString();
     this.problem.route.RGB = this.problem.route.RGB.filter(x => x.index !== indexString);
@@ -136,7 +144,7 @@ export class ProblemComponent implements OnInit {
 
   onHoldSelected(index: number) {
     if (index < 0) return; // gap pressed
-    if (this.readonly) return;
+    if (this.readonly || !this.problem || !this.problem.route) return;
 
     var hold = index.toString();
     if (this.problem.route.START.filter(x => x === hold).length > 0) {
@@ -182,10 +190,17 @@ export class ProblemComponent implements OnInit {
     return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
   }
 
+  clearCells() {
+    for (const row of this.cells) {
+      for (const cell of row) {
+        cell.holdType = '';
+        cell.color = '';
+      }
+    }
+  }
+
   updateCellsToMatchProblem() {
-    for (let i = 0; i < this.cells.length; i++)
-      for (let j = 0; j < this.cells[i].length; j++)
-        this.cells[i][j].holdType = '';
+    this.clearCells();
 
     for (let index of this.problem.route.START) {
       this.updateCells(parseInt(index), 'START', '');
@@ -205,7 +220,7 @@ export class ProblemComponent implements OnInit {
   }
 
   startDrawing() {
-    this.isDrawing = true;
+    this.isDrawing = !this.readonly && this.isArt && !!this.problem && !!this.problem.route && !!this.artColor;
   }
 
   endDrawing() {

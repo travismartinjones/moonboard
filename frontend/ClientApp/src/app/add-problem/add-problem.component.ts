@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Problem } from "../problem";
-import { NouisliderModule } from 'ng2-nouislider';
 import { VDifficultyFormatter } from '../vdifficultyformatter';
 import { ProblemsService } from '../services/problems.service';
 import { Router } from '@angular/router';
@@ -14,7 +13,7 @@ declare var Huebee: any;
   templateUrl: './add-problem.component.html',
   styleUrls: ['./add-problem.component.css']
 })
-export class AddProblemComponent implements OnInit {
+export class AddProblemComponent {
   error: string;
   difficulty: number = 0;
   isNameInvalid: boolean;
@@ -25,7 +24,16 @@ export class AddProblemComponent implements OnInit {
   problemError: string;
   problem: Problem;
   hueb: any;
-  currentColor: Color = { r: 0, g: 0, b: 0, hex: '#000' };
+  hasHuebee: boolean = typeof Huebee === 'function';
+  currentColor: Color = { r: 0, g: 0, b: 0, hex: '#000000' };
+
+  @ViewChild('colorInput', { static: false })
+  set colorInput(input: ElementRef<HTMLInputElement>) {
+    if (!input || !this.hasHuebee || this.hueb) return;
+
+    this.hueb = new Huebee(input.nativeElement, { notation: 'hex' });
+    this.hueb.on('change', color => this.setColor(color));
+  }
   sliderConfig: any = {
     step: 1,
     connect: 'lower',
@@ -47,15 +55,6 @@ export class AddProblemComponent implements OnInit {
     eventAggregator.subscribe('holdSetupChangedEvent', setup => {
       this.updateIsArt();
     }, this);
-  }
-
-  ngOnInit() {
-    this.hueb = new Huebee('.color-input', {
-      notation: 'hex'
-    });
-    this.hueb.on('change', color => {
-      this.setColor(color);
-    });
   }
 
   updateIsArt() {
@@ -101,13 +100,15 @@ export class AddProblemComponent implements OnInit {
   }
 
   setColor(hex: string) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    var rgb = {
+    const normalized = (hex || '').replace(/^#([a-f\d])([a-f\d])([a-f\d])$/i, '#$1$1$2$2$3$3');
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(normalized);
+    if (!result) return;
+
+    this.currentColor = {
       r: parseInt(result[1], 16),
       g: parseInt(result[2], 16),
       b: parseInt(result[3], 16),
-      hex: hex
+      hex: '#' + result[1] + result[2] + result[3]
     };
-    this.currentColor = rgb;
   }
 }

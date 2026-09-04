@@ -1,128 +1,101 @@
+/* Layout images and all hold targets share the same 1000 x 1560 bounds. */
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.problem-container {
+  position: relative;
+  width: 100%;
+  padding-top: 156%;
+}
+
 .problem {
-  border: solid 2px #CCC;
-  background-size: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(23, minmax(0, 1fr));
+  grid-template-rows: repeat(36, minmax(0, 1fr));
+  background-size: 100% 100%;
   background-repeat: no-repeat;
+  box-shadow: inset 0 0 0 1px #ccc;
 }
 
-.Nov2020 {
-  background-image: url(/assets/layouts/Nov2020.jpg);
-}
+.Nov2020 { background-image: url(/assets/layouts/Nov2020.jpg); }
+.Sep2021 { background-image: url(/assets/layouts/Sep2021.jpg); }
+.Art { background-color: #222; }
 
-.Sep2021 {
-  background-image: url(/assets/layouts/Sep2021.jpg);
-}
-
-.Art {
-    background-color: #222;
+.board-cell {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
 }
 
 .hold {
-  max-width: calc( min(90vw, 1000px) / 36);
-  max-height: calc( min(90vw, 1000px) / 36);
-  width: calc( min(90vw, 1000px) / 27 );
-  height: calc( min(90vw, 1000px) / 27 );
-  border-radius: calc( min(90vw, 1000px) / 54 );
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  z-index: 1;
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
-.light-container {
-  max-width: calc( min(90vw, 1000px) / 36);
-  max-height: calc( min(90vw, 1000px) / 36);
-  width: calc( min(90vw, 1000px) / 27 );
-  height: calc( min(90vw, 1000px) / 27 );
+.hold:disabled { cursor: default; opacity: 1; }
+.hold:focus-visible { outline: 2px solid #0366d6; outline-offset: 2px; }
+.Art .hold { box-shadow: inset 0 0 0 1px #777; }
+
+/* Circle size and center use the cell, never the viewport. */
+.problem:not(.Art) .hold.FEET::after,
+.problem:not(.Art) .hold.START::after,
+.problem:not(.Art) .hold.TOP::after,
+.problem:not(.Art) .hold.MOVES::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 160%;
+  height: 160%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
 }
 
-.Art .hold {
-  border-style: solid;
-  border-width: 1px;
-  border-color: #777;
-}
-
-.light {
-    visibility: hidden;
-}
-
-.gap {
-  max-width: calc( min(90vw, 1000px) / 36);
-  max-height: calc( min(90vw, 1000px) / 36);
-  height: calc( min(90vw, 1000px) / 27 );
-  width: calc( min(90vw, 1000px) / 27 );
-}
-
-.problem .FEET:after {
-  border-color: #fcce03;
+.problem:not(.Art) .hold.FEET::after {
+  box-shadow: inset 0 0 0 2px #fcce03;
   background-color: #fcce0333;
-  border-style: solid;
-  border-width: 3px;
-  position: relative;
-  max-height: 45px;
-  max-width: 45px;
-  width: calc( min(90vw, 1000px) / 18 );
-  height: calc( min(90vw, 1000px) / 18 );
-  top: calc( min(90vw, 1000px) / -72 );
-  left: calc( min(90vw, 1000px) / -72 );
-  border-radius: calc( min(90vw, 1000px) / 9 );
-  content: " ";
-  display: block;
 }
-
-.problem .START:after {
-  border-color: #03fc77;
+.problem:not(.Art) .hold.START::after {
+  box-shadow: inset 0 0 0 2px #03fc77;
   background-color: #03fc7733;
-  border-style: solid;
-  border-width: 3px;
-  position: relative;
-  max-height: 45px;
-  max-width: 45px;
-  width: calc( min(90vw, 1000px) / 18 );
-  height: calc( min(90vw, 1000px) / 18 );
-  top: calc( min(90vw, 1000px) / -72 );
-  left: calc( min(90vw, 1000px) / -72 );
-  border-radius: calc( min(90vw, 1000px) / 9 );
-  content: " ";
-  display: block;
 }
-
-.problem .TOP:after {
-  border-color: #fc03df;
+.problem:not(.Art) .hold.TOP::after {
+  box-shadow: inset 0 0 0 2px #fc03df;
   background-color: #fc03df33;
-  border-style: solid;
-  border-width: 3px;
-  position: relative;
-  max-height: 45px;
-  max-width: 45px;
-  width: calc( min(90vw, 1000px) / 18 );
-  height: calc( min(90vw, 1000px) / 18 );
-  top: calc( min(90vw, 1000px) / -72 );
-  left: calc( min(90vw, 1000px) / -72 );
-  border-radius: calc( min(90vw, 1000px) / 9 );
-  content: " ";
-  display: block;
 }
-
-.problem .MOVES:after {
-  border-color: #03dffc;
+.problem:not(.Art) .hold.MOVES::after {
+  box-shadow: inset 0 0 0 2px #03dffc;
   background-color: #03dffc33;
-  border-style: solid;
-  border-width: 3px;
-  position: relative;
-  max-height: 45px;
-  max-width: 45px;
-  width: calc( min(90vw, 1000px) / 18 );
-  height: calc( min(90vw, 1000px) / 18 );
-  top: calc( min(90vw, 1000px) / -72 );
-  left: calc( min(90vw, 1000px) / -72 );
-  border-radius: calc( min(90vw, 1000px) / 9 );
-  content: " ";
-  display: block;
 }
 
-.lightbulb-button.isLighting {
-  color: #DDD;
+.board-controls {
+  display: flex;
+  align-items: center;
+  margin-top: .5rem;
 }
-
-.lightbulb-button {
-    color: #555;
-    position: absolute;
-    margin-top: -20px;
-    margin-left: 5px;
+.lighting-button {
+  display: inline-flex;
+  align-items: center;
+  padding: .375rem .75rem;
+  font-size: .875rem;
 }
+.lighting-button .fa { margin-right: .5rem; }

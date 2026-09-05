@@ -1,24 +1,64 @@
-/* You can add global styles to this file, and also import other style files */
-
-/* Provide sufficient contrast against white background */
 @import "~nouislider/distribute/nouislider.min.css";
 
-a {
-  color: #0366d6;
+:root {
+  color-scheme: light;
+  --sb-bg: #f3f2ed;
+  --sb-surface: #fdfcf8;
+  --sb-text: #26362f;
+  --sb-muted: #66746c;
+  --sb-border: #d8ded6;
+  --sb-accent: #176458;
+  --sb-on-accent: #ffffff;
+  --sb-accent-soft: #e6eee8;
+  --sb-danger: #ac3e38;
+  --sb-header-height: 60px;
+  --sb-safe-top: env(safe-area-inset-top, 0px);
 }
 
-code {
-  color: #e01a76;
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --sb-bg: #151d19;
+    --sb-surface: #1e2822;
+    --sb-text: #e9eee7;
+    --sb-muted: #a7b5aa;
+    --sb-border: #36473b;
+    --sb-accent: #9ad3bb;
+    --sb-on-accent: #143528;
+    --sb-accent-soft: #293f32;
+    --sb-danger: #f5a79d;
+  }
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-body {
-    .container {
-      max-width: 656px;
-    }
-}
+* { box-sizing: border-box; }
+html { height: 100%; -webkit-text-size-adjust: 100%; }
+body { min-width: 280px; min-height: 100%; margin: 0; background: var(--sb-bg); color: var(--sb-text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 15px; line-height: 1.5; }
+app-root { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.app-content { flex: 1 1 auto; min-width: 0; min-height: 0; width: 100%; }
+button, input, select, textarea { font: inherit; }
+button { touch-action: manipulation; }
+a { color: var(--sb-accent); }
+a:hover { color: var(--sb-accent); }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--sb-accent); outline-offset: 3px; }
+.skip-link { position: fixed; left: 12px; top: -100px; z-index: 1000; padding: 10px 16px; background: var(--sb-accent); color: var(--sb-on-accent); border-radius: 6px; }
+.skip-link:focus { top: 10px; color: var(--sb-on-accent); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; border-radius: 7px; font-weight: 600; transition: background-color 140ms ease, border-color 140ms ease; }
+.btn-primary, .btn-primary:not(:disabled):not(.disabled):active { color: var(--sb-on-accent); background: var(--sb-accent); border-color: var(--sb-accent); }
+.btn-primary:hover, .btn-primary:focus { color: var(--sb-on-accent); background: var(--sb-accent); border-color: var(--sb-accent); filter: brightness(.93); }
+.btn-primary:disabled { color: var(--sb-on-accent); background: var(--sb-accent); border-color: var(--sb-accent); }
+.btn-secondary, .btn-outline-secondary { color: var(--sb-text); background: var(--sb-surface); border-color: var(--sb-border); }
+.btn-secondary:hover, .btn-outline-secondary:hover { color: var(--sb-text); background: var(--sb-accent-soft); border-color: var(--sb-border); }
+.form-control, .custom-select { min-height: 44px; border-radius: 7px; border: 1px solid var(--sb-border); background-color: var(--sb-surface); color: var(--sb-text); font-size: 15px; }
+.custom-select { appearance: auto; background-image: none; padding-right: 12px; }
+.form-control::placeholder { color: var(--sb-muted); opacity: .9; }
+.form-control:focus, .custom-select:focus { background-color: var(--sb-surface); border-color: var(--sb-accent); color: var(--sb-text); box-shadow: 0 0 0 2px var(--sb-accent-soft); }
+.form-control[readonly] { background-color: var(--sb-surface); }
+.form-control.is-invalid { border-color: var(--sb-danger); }
+.invalid-feedback { color: var(--sb-danger); }
+.noUi-target { border: 1px solid var(--sb-border); background: var(--sb-border); box-shadow: none; }
+.noUi-connect { background: var(--sb-accent); }
+.noUi-handle { border: 1px solid var(--sb-border); background: var(--sb-surface); box-shadow: 0 1px 3px rgba(0,0,0,.1); cursor: grab; }
+.noUi-handle:before, .noUi-handle:after { background: var(--sb-muted); }
+.noUi-tooltip { border: 1px solid var(--sb-border); border-radius: 5px; color: var(--sb-text); background: var(--sb-surface); font-size: 13px; }
+.huebee { z-index: 60; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }

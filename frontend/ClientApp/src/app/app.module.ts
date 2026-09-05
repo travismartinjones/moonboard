@@ -9,6 +9,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { ProblemComponent } from './problem/problem.component';
+import { BoardViewerComponent } from './board-viewer/board-viewer.component';
 import { AddProblemComponent } from './add-problem/add-problem.component';
 import { EditProblemComponent } from './edit-problem/edit-problem.component';
 import { LedsService } from './services/leds.service';
@@ -24,6 +25,7 @@ import { VDifficultyFormatter } from './vdifficultyformatter';
     FooterComponent,
     HomeComponent,
     ProblemComponent,
+    BoardViewerComponent,
     AddProblemComponent,
     EditProblemComponent
   ],

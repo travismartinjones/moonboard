@@ -10,11 +10,15 @@ export class EventAggregatorService {
 
   subscribe(event, handler, context) {
     if (typeof context === 'undefined') { context = handler; }
-    this.handlers.push({ event: event, handler: handler.bind(context) });
+    const subscription = { event: event, handler: handler.bind(context) };
+    this.handlers.push(subscription);
+    return () => {
+      this.handlers = this.handlers.filter(topic => topic !== subscription);
+    };
   }
 
   publish(event, args) {
-    this.handlers.forEach(topic => {
+    this.handlers.slice().forEach(topic => {
       if (topic.event === event) {
         topic.handler(args)
       }

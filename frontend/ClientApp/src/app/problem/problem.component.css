@@ -5,6 +5,31 @@
   min-width: 0;
 }
 
+.board-stage {
+  width: 100%;
+  min-width: 0;
+}
+
+:host(.fit-to-container) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+:host(.fit-to-container) .board-stage {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.problem-container.contained {
+  flex: 0 0 auto;
+  padding-top: 0;
+}
+
 .problem-container {
   position: relative;
   width: 100%;
@@ -22,7 +47,7 @@
   grid-template-rows: repeat(36, minmax(0, 1fr));
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  box-shadow: inset 0 0 0 1px #ccc;
+  box-shadow: inset 0 0 0 1px var(--sb-border, #ccc);
 }
 
 .Nov2020 { background-image: url(/assets/layouts/Nov2020.jpg); }
@@ -51,7 +76,7 @@
 }
 
 .hold:disabled { cursor: default; opacity: 1; }
-.hold:focus-visible { outline: 2px solid #0366d6; outline-offset: 2px; }
+.hold:focus-visible { outline: 2px solid var(--sb-accent, #0366d6); outline-offset: 2px; }
 .Art .hold { box-shadow: inset 0 0 0 1px #777; }
 
 /* Circle size and center use the cell, never the viewport. */
@@ -89,13 +114,43 @@
 
 .board-controls {
   display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
   align-items: center;
-  margin-top: .5rem;
+  gap: .5rem .75rem;
+  margin-top: .75rem;
+  color: var(--sb-text, #242b33);
 }
-.lighting-button {
+
+.lighting-button,
+.retry-button {
   display: inline-flex;
   align-items: center;
-  padding: .375rem .75rem;
+  justify-content: center;
+  min-height: 44px;
+  padding: .5rem .875rem;
+  border: 1px solid var(--sb-border, #cbd0d6);
+  border-radius: var(--sb-radius, 8px);
+  background: var(--sb-surface, #fff);
+  color: var(--sb-text, #242b33);
+  font: inherit;
+  cursor: pointer;
+}
+
+.lighting-button.active {
+  border-color: var(--sb-accent, #1b6ec2);
+  color: var(--sb-accent, #1b6ec2);
+}
+
+.lighting-button:disabled { opacity: .6; cursor: default; }
+.lighting-button svg { flex-shrink: 0; margin-right: .5rem; }
+.lighting-status { color: var(--sb-muted, #68727d); font-size: .875rem; }
+.lighting-error {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  gap: .75rem;
+  color: var(--sb-danger, #a32c36);
   font-size: .875rem;
 }
-.lighting-button .fa { margin-right: .5rem; }
+.retry-button { flex-shrink: 0; }

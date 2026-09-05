@@ -3,7 +3,7 @@ import { ProblemsService } from '../services/problems.service';
 import { ModeService } from '../services/mode.service';
 
 @Component({
-  selector: 'footer',
+  selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css']
 })

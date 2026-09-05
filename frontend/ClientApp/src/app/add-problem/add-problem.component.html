@@ -1,52 +1,47 @@
-<form (ngSubmit)="addProblem()">
-    <p>Add Problem</p>
-    <div class="row mb-3">
-        <div class="col-12">
-            <problem [readonly]="false" [class.is-invalid]="isProblemInvalid" [problem]="problem" [artColor]="currentColor" (onProblemChanged)="onProblemChanged($event)"></problem>
-            <div class="invalid-feedback">
-                {{problemError}}
-            </div>
-        </div>
+<div class="editor-page">
+  <div class="editor-heading">
+    <a class="back-link" routerLink="/">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14 6-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      Climb
+    </a>
+    <h1>Create problem</h1>
+    <p>{{isArt ? 'Choose a color, then tap holds to paint.' : 'Tap holds to build your route.'}}</p>
+  </div>
+  <form (ngSubmit)="addProblem()">
+    <div class="editor-color" [style.display]="isArt ? 'flex' : 'none'">
+      <label for="color">Hold color</label>
+      <input #colorInput data-lpignore="true" id="color" class="form-control color-input" [type]="hasHuebee ? 'text' : 'color'" [readOnly]="hasHuebee" [value]="currentColor.hex" (input)="setColor($event.target.value)" />
     </div>
-    <div class="form-group row" [style.display]="isArt ? 'flex' : 'none'">
-        <label for="color" class="col-sm-2 col-form-label">Color</label>
-        <div class="col-sm-10">
-            <input #colorInput data-lpignore="true" id="color" class="form-control color-input" [type]="hasHuebee ? 'text' : 'color'" [readOnly]="hasHuebee" [value]="currentColor.hex" (input)="setColor($event.target.value)" />
-        </div>
+    <div class="editor-board">
+      <problem [readonly]="false" [class.is-invalid]="isProblemInvalid" [problem]="problem" [artColor]="currentColor" (onProblemChanged)="onProblemChanged($event)"></problem>
+      <p *ngIf="isProblemInvalid" class="field-error" role="alert">{{problemError}}</p>
     </div>
-    <div class="form-group row">
-        <label for="name" class="col-sm-2 col-form-label">Name</label>
-        <div class="col-sm-10">
-            <input data-lpignore="true" type="text" class="form-control" id="name" name="name" placeholder="Boulder Name" [class.is-invalid]="isNameInvalid" [(ngModel)]="problem.name">
-            <div class="invalid-feedback">
-                Please add a boulder name.
-            </div>
+    <div class="editor-fields">
+      <div class="editor-field">
+        <label for="name">Name</label>
+        <input data-lpignore="true" type="text" class="form-control" id="name" name="name" placeholder="Problem name" [class.is-invalid]="isNameInvalid" [attr.aria-invalid]="isNameInvalid || null" [attr.aria-describedby]="isNameInvalid ? 'name-error' : null" [(ngModel)]="problem.name" />
+        <p *ngIf="isNameInvalid" class="field-error" id="name-error">Enter a problem name.</p>
+      </div>
+      <div class="editor-field">
+        <label for="setter">Setter</label>
+        <input data-lpignore="true" type="text" class="form-control" id="setter" name="setter" placeholder="Setter name" [class.is-invalid]="isSetterNameInvalid" [attr.aria-invalid]="isSetterNameInvalid || null" [attr.aria-describedby]="isSetterNameInvalid ? 'setter-error' : null" [(ngModel)]="problem.setter" />
+        <p *ngIf="isSetterNameInvalid" class="field-error" id="setter-error">Enter the setter's name.</p>
+      </div>
+      <div class="editor-field editor-field-wide">
+        <label for="notes">Notes <span>Optional</span></label>
+        <textarea data-lpignore="true" class="form-control" id="notes" name="notes" rows="3" placeholder="Beta, rules, or anything to remember." [(ngModel)]="problem.notes"></textarea>
+      </div>
+      <div class="editor-field editor-field-wide difficulty-field">
+        <label id="difficulty-label">Difficulty</label>
+        <div class="difficulty-slider">
+          <nouislider [config]="sliderConfig" id="difficulty" name="difficulty" aria-labelledby="difficulty-label" [(ngModel)]="difficulty"></nouislider>
         </div>
+      </div>
     </div>
-    <div class="form-group row">
-        <label for="setter" class="col-sm-2 col-form-label">Setter</label>
-        <div class="col-sm-10">
-            <input data-lpignore="true" type="text" class="form-control" id="setter" name="setter" placeholder="Setter Name" [class.is-invalid]="isSetterNameInvalid" [(ngModel)]="problem.setter">
-            <div class="invalid-feedback">
-                Please add a setter name.
-            </div>
-        </div>
+    <p *ngIf="error" class="editor-error" role="alert">{{error}}</p>
+    <div class="editor-actions">
+      <a class="btn btn-outline-secondary" routerLink="/">Cancel</a>
+      <button type="submit" class="btn btn-primary" [disabled]="isSaving">{{isSaving ? 'Saving…' : 'Create problem'}}</button>
     </div>
-    <div class="form-group row">
-        <label for="notes" class="col-sm-2 col-form-label">Notes</label>
-        <div class="col-sm-10">
-            <textarea data-lpignore="true" type="text" class="form-control" id="notes" name="notes" placeholder="Notes" [(ngModel)]="problem.notes"></textarea>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="difficulty" class="col-sm-2 col-form-label">Difficulty</label>
-        <div class="col-sm-10 mt-4">
-            <nouislider [config]="sliderConfig" name="difficulty" [(ngModel)]="difficulty"></nouislider>
-        </div>
-    </div>
-    <div class="form-group row">
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Add</button>
-        </div>
-    </div>
-</form>
+  </form>
+</div>

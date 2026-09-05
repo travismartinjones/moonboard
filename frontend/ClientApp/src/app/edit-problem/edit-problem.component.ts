@@ -8,11 +8,14 @@ declare var Huebee: any;
 
 @Component({
   selector: 'edit-problem',
-  templateUrl: './edit-problem.component.html'
+  templateUrl: './edit-problem.component.html',
+  styleUrls: ['../add-problem/add-problem.component.css']
 })
 export class EditProblemComponent implements OnInit {
   error: string;
+  isSaving: boolean = false;
   isLoading: boolean = true;
+  saveError: string;
   difficulty: number = 0;
   isNameInvalid: boolean;
   isSetterNameInvalid: boolean;
@@ -85,7 +88,8 @@ export class EditProblemComponent implements OnInit {
   }
 
   updateProblem() {
-    if (!this.problem || this.isLoading) return;
+    if (!this.problem || this.isLoading || this.isSaving) return;
+    this.saveError = null;
 
     this.problem.difficulty = 'V' + this.difficulty;
     this.isNameInvalid = !this.problem.name;
@@ -105,8 +109,12 @@ export class EditProblemComponent implements OnInit {
 
     if (this.isNameInvalid || this.isSetterNameInvalid || this.isDifficultyInvalid || this.isProblemInvalid) return;
 
+    this.isSaving = true;
     this.problemsService.updateProblem(this.problem).then(() => {
       this.router.navigate(['/'], { queryParams: { id: this.problem.id } });
+    }).catch(() => {
+      this.isSaving = false;
+      this.saveError = 'Unable to save your changes. Please try again.';
     });
   }
 

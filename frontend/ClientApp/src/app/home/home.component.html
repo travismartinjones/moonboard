@@ -1,40 +1,89 @@
-<div class="home">
-    <form (submit)="search(0)">
-        <div class="form-group row">
-            <div class="col-sm-6 mt-0 mt-sm-5">
-                <input type="text" class="form-control" id="name" name="name" placeholder="Search" [(ngModel)]="name" (ngModelChange)="onNameChange($event)">
-            </div>
-            <div class="col-sm-6 mt-5 difficulty-filter">
-                <nouislider [config]="sliderConfig" name="difficulty" [(ngModel)]="difficultyRange" (ngModelChange)="onDifficultyChange($event)"></nouislider>
-            </div>
+<section class="climb-screen" [attr.inert]="panel ? '' : null" aria-label="Climbing board">
+  <div class="current-problem" *ngIf="selectedProblem && !loading">
+    <span class="current-grade">{{setup === 'Art' ? 'Art' : selectedProblem.difficulty}}</span>
+    <button type="button" class="current-copy" (click)="openPanel('details', $event)" aria-label="View current problem details">
+      <h1>{{selectedProblem.name}}</h1>
+      <span>{{selectedProblem.setter || 'Unknown setter'}} <span class="meta-separator">/</span> Details ›</span>
+    </button>
+    <div class="current-actions">
+      <button type="button" class="icon-button favorite-button" [class.is-favorite]="isFavorite(selectedProblem.id)" [attr.aria-pressed]="isFavorite(selectedProblem.id)" [attr.aria-label]="isFavorite(selectedProblem.id) ? 'Remove from favorites' : 'Add to favorites'" (click)="toggleFavorite(selectedProblem)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.3.9-4.5 4.4 1.1 6.3-5.7-3-5.7 3 1.1-6.3-4.5-4.4 6.3-.9Z"/></svg>
+      </button>
+      <button type="button" class="icon-button" aria-label="Expand and zoom the board" (click)="openPanel('zoom', $event)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>
+    </div>
+  </div>
+
+  <div class="board-area" [class.is-empty]="!selectedProblem || loading">
+    <problem *ngIf="!loading && !loadError" class="climb-board" [readonly]="true" [problem]="selectedProblem" [showControls]="false" [autoSend]="false" [fitToContainer]="true"></problem>
+    <div class="board-message" *ngIf="loading" role="status"><span class="loading-mark"></span><h1>Loading your board</h1><p>Getting your problems ready.</p></div>
+    <div class="board-message" *ngIf="loadError" role="alert"><h1>Can’t reach the board</h1><p>{{loadError}}</p><button type="button" class="primary-button" (click)="loadProblems()">Try again</button></div>
+    <div class="board-message empty-board-message" *ngIf="!loading && !loadError && !problems.length"><h1>No problems yet</h1><p>Create the first problem for your {{setupLabel}} layout.</p><a class="primary-button" [routerLink]="['/add-problem']">Create a problem</a></div>
+  </div>
+
+  <footer class="climb-dock">
+    <div class="hold-legend" *ngIf="setup !== 'Art'" aria-label="Hold color key"><span><i class="start-dot"></i>Start</span><span><i class="move-dot"></i>Move</span><span><i class="top-dot"></i>Top</span><span><i class="feet-dot"></i>Feet</span></div>
+    <div class="wall-error" *ngIf="wallError" role="alert">{{wallError}}</div>
+    <div class="inline-notice" *ngIf="notice" role="status">{{notice}}</div>
+    <div class="dock-status">
+      <button type="button" class="lighting-toggle" [class.is-on]="wallState === 'on'" [class.has-error]="wallState === 'error'" [disabled]="!canToggleLighting" [attr.aria-label]="lightingAction" [attr.aria-pressed]="wallState === 'on'" (click)="toggleLighting()">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6m-5 3h4M8.8 14.5a6 6 0 1 1 6.4 0L15 16H9Z"/></svg>{{lightingLabel}}
+      </button>
+      <div class="navigation-status">{{navigationLabel}}</div>
+    </div>
+    <div class="climb-navigation">
+      <button type="button" class="step-button" aria-label="Previous problem" [disabled]="previousDisabled" (click)="step(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg><span>Prev</span></button>
+      <button type="button" class="primary-button picker-button" [disabled]="loading || !!loadError" (click)="openPanel('library', $event)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.1M3 12h.1M3 18h.1"/></svg>Problems<span class="queue-count" *ngIf="sessionProblems.length">{{sessionProblems.length}} in session</span></button>
+      <button type="button" class="step-button" aria-label="Next problem" [disabled]="nextDisabled" (click)="step(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg><span>Next</span></button>
+    </div>
+  </footer>
+</section>
+
+<div class="sheet-backdrop" *ngIf="panel" [class.zoom-backdrop]="panel === 'zoom'" [style.height.px]="panelHeight" [style.top.px]="panelTop" (click)="closePanel()">
+  <section #dialog class="sheet" [style.max-height.px]="panelHeight ? panelHeight - (panel === 'zoom' ? 0 : 12) : null" [class.details-sheet]="panel === 'details'" [class.zoom-sheet]="panel === 'zoom'" role="dialog" aria-modal="true" [attr.aria-label]="panel === 'library' ? 'Problem library' : panel === 'zoom' ? 'Board inspection' : 'Problem details'" (click)="$event.stopPropagation()">
+    <div *ngIf="panel !== 'zoom'" class="sheet-handle" aria-hidden="true"></div>
+    <header *ngIf="panel !== 'zoom'" class="sheet-header"><div><span class="eyebrow">{{setupLabel}} layout</span><h2>{{panel === 'library' ? 'Your problems' : 'Problem details'}}</h2></div><button type="button" class="icon-button close-button" (click)="closePanel()" aria-label="Return to climbing"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></header>
+
+    <ng-container *ngIf="panel === 'library'">
+      <nav class="collection-tabs" aria-label="Problem collections">
+        <button type="button" [class.is-active]="collection === 'all'" [attr.aria-pressed]="collection === 'all'" (click)="setCollection('all')">All <span>{{problems.length}}</span></button>
+        <button type="button" [class.is-active]="collection === 'session'" [attr.aria-pressed]="collection === 'session'" (click)="setCollection('session')">Session <span>{{sessionProblems.length}}</span></button>
+        <button type="button" [class.is-active]="collection === 'favorites'" [attr.aria-pressed]="collection === 'favorites'" (click)="setCollection('favorites')">Favorites</button>
+        <button type="button" [class.is-active]="collection === 'recent'" [attr.aria-pressed]="collection === 'recent'" (click)="setCollection('recent')">Recent</button>
+      </nav>
+      <div class="library-filters">
+        <label class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input type="search" placeholder="Name, setter or notes" aria-label="Search problems" [(ngModel)]="name" (ngModelChange)="applyFilters()" autocomplete="off"></label>
+        <div class="grade-filters" *ngIf="setup !== 'Art'"><label for="minimum-grade">Grade</label><select id="minimum-grade" aria-label="Minimum grade" [ngModel]="minimumGrade" (ngModelChange)="updateMinimum($event)"><option *ngFor="let grade of grades" [ngValue]="grade">V{{grade}}</option></select><span>to</span><select aria-label="Maximum grade" [ngModel]="maximumGrade" (ngModelChange)="updateMaximum($event)"><option *ngFor="let grade of grades" [ngValue]="grade">V{{grade}}</option></select><button type="button" class="text-button clear-filters" *ngIf="hasFilters" (click)="resetFilters()">Reset</button></div>
+      </div>
+      <div class="result-summary"><span aria-live="polite">{{visibleProblems.length}} {{visibleProblems.length === 1 ? 'problem' : 'problems'}}</span><span>{{collection === 'session' ? 'Your climbing order' : 'Tap + to build a session'}}</span></div>
+      <div #problemList class="problem-list" (scroll)="rememberLibraryScroll()">
+        <div class="problem-row" *ngFor="let problem of visibleProblems; let index = index; trackBy: trackProblem" [class.is-selected]="selectedProblem && selectedProblem.id === problem.id">
+          <button type="button" class="load-problem" [disabled]="wallState === 'sending'" [attr.aria-label]="'Load ' + problem.name + ', ' + problem.difficulty" [attr.aria-current]="selectedProblem && selectedProblem.id === problem.id ? 'true' : null" (click)="loadProblem(problem, true)">
+            <span class="list-grade">{{setup === 'Art' ? 'Art' : problem.difficulty}}</span><span class="list-copy"><span class="list-name">{{problem.name}}</span><span class="list-setter">{{problem.setter || 'Unknown setter'}}<span *ngIf="selectedProblem && selectedProblem.id === problem.id" class="selected-label"> · Selected</span></span></span>
+          </button>
+          <button *ngIf="collection === 'session' && !hasFilters" type="button" class="icon-button reorder-button" [disabled]="index === 0" [attr.aria-label]="'Move ' + problem.name + ' earlier in session'" (click)="moveEarlier(problem)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></button>
+          <button type="button" class="icon-button queue-button" [class.is-queued]="inSession(problem.id)" [attr.aria-pressed]="inSession(problem.id)" [attr.aria-label]="(inSession(problem.id) ? 'Remove from session: ' : 'Add to session: ') + problem.name" (click)="toggleSession(problem)"><svg viewBox="0 0 24 24" aria-hidden="true"><path *ngIf="!inSession(problem.id)" d="M12 5v14M5 12h14"/><path *ngIf="inSession(problem.id)" d="m5 12 4 4L19 6"/></svg></button>
         </div>
-    </form>
-    <div class="table-fixed">
-        <table class="table">
-            <thead class="thead-light">
-                <tr>
-                    <th>Name</th>
-                    <th>Difficulty</th>
-                    <th>Setter</th>
-                </tr>
-            </thead>
-            <tbody>
-                <ng-container *ngFor="let problem of problems">
-                    <tr (click)="selectProblem(problem)" [class.bg-info]="selectedProblem === problem" [class.text-white]="selectedProblem === problem">
-                        <td>{{problem.name}}</td>
-                        <td>{{problem.difficulty}}</td>
-                        <td>{{problem.setter}}</td>
-                    </tr>
-                    <tr *ngIf="selectedProblem === problem && problem.notes" class="bg-light problem-notes">
-                        <td colspan="3">{{problem.notes}}</td>
-                    </tr>
-                </ng-container>
-            </tbody>
-        </table>
+        <div class="library-empty" *ngIf="!visibleProblems.length">
+          <h3>{{hasFilters ? 'No matches' : collection === 'session' ? 'Build your session' : collection === 'favorites' ? 'Keep the good ones close' : collection === 'recent' ? 'Your recent climbs live here' : 'No problems yet'}}</h3>
+          <p>{{hasFilters ? 'Try another name or a wider grade range.' : collection === 'session' ? 'Add problems with +, then climb through them in order.' : collection === 'favorites' ? 'Use the star on a problem to save it here.' : collection === 'recent' ? 'Load a problem to get started.' : 'Create a problem for this layout.'}}</p>
+          <button type="button" class="secondary-button" *ngIf="hasFilters" (click)="resetFilters()">Clear filters</button>
+          <button type="button" class="secondary-button" *ngIf="!hasFilters && collection !== 'all'" (click)="setCollection('all')">Browse all problems</button>
+          <a class="primary-button" *ngIf="!hasFilters && collection === 'all'" [routerLink]="['/add-problem']">Create a problem</a>
+        </div>
+      </div>
+      <footer class="library-footer" *ngIf="sessionProblems.length"><div><strong>{{sessionProblems.length}} in your session</strong><span>Saved on this phone</span></div><button type="button" class="primary-button" [disabled]="wallState === 'sending'" (click)="startSession()">Start session<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></footer>
+    </ng-container>
+
+    <div class="details-content" *ngIf="panel === 'details' && selectedProblem">
+      <span class="detail-grade">{{setup === 'Art' ? 'Art' : selectedProblem.difficulty}}</span><h3>{{selectedProblem.name}}</h3><p class="detail-setter">Set by {{selectedProblem.setter || 'Unknown setter'}}</p>
+      <div class="details-notes"><h4>Notes</h4><p>{{selectedProblem.notes || 'No notes for this problem.'}}</p></div>
+      <div class="detail-buttons"><button type="button" class="secondary-button" (click)="toggleSession(selectedProblem)">{{inSession(selectedProblem.id) ? 'Remove from session' : 'Add to session'}}</button><button type="button" class="secondary-button" (click)="edit()">Edit problem</button></div>
+      <div class="delete-confirmation" *ngIf="confirmDelete"><h4>Delete this problem?</h4><p>This removes it from the board’s library for everyone.</p><div><button type="button" class="danger-button" [disabled]="deleting" (click)="deleteProblem()">{{deleting ? 'Deleting…' : 'Delete problem'}}</button><button type="button" class="text-button" [disabled]="deleting" (click)="confirmDelete = false">Keep problem</button></div></div>
+      <button type="button" *ngIf="!confirmDelete" class="text-button delete-link" (click)="confirmDelete = true">Delete problem</button>
+      <p *ngIf="deleteError" role="alert" class="wall-error">{{deleteError}}</p>
     </div>
-    <problem [readonly]="true" [problem]="selectedProblem"></problem>
-    <div class="problem-actions mt-2">
-        <button *ngIf="selectedProblem && !selectedProblem.isNew" type="button" class="btn btn-primary" (click)="edit()">Edit</button>
-        <button *ngIf="selectedProblem && !selectedProblem.isNew" type="button" (click)="delete()" class="btn btn-danger">Delete</button>
-    </div>
+
+    <app-board-viewer *ngIf="panel === 'zoom' && selectedProblem" [problem]="selectedProblem" (closed)="closePanel()"></app-board-viewer>
+  </section>
 </div>
+<span class="screen-reader-status" aria-live="polite">{{announcement}}</span>

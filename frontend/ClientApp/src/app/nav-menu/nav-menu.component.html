@@ -1,35 +1,39 @@
-<header>
-  <nav
-    class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"
-  >
-    <div class="container">
-      <a class="navbar-brand" [routerLink]="['/']">System Board</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target=".navbar-collapse"
-        aria-label="Toggle navigation"
-        [attr.aria-expanded]="isExpanded"
-        (click)="toggle()"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div
-        class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"
-        [ngClass]="{ show: isExpanded }"
-      >
-          <ul class="navbar-nav flex-grow">
-              <li class="nav-item"
-                  [routerLinkActive]="['link-active']"
-                  [routerLinkActiveOptions]="{ exact: true }">
-                  <a class="nav-link text-dark" [routerLink]="['/']">Search</a>
-              </li>
-              <li class="nav-item" [routerLinkActive]="['link-active']">
-                  <a class="nav-link text-dark" [routerLink]="['/add-problem']">Add</a>
-              </li>
-          </ul>
-      </div>
+<header class="app-header">
+  <nav class="app-nav" aria-label="Main navigation">
+    <a class="brand" routerLink="/" (click)="closeSettings()" aria-label="System Board home">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 3h12l3 18H3L6 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+        <circle cx="9" cy="8" r="1.4" fill="currentColor" />
+        <circle cx="15" cy="12" r="1.4" fill="currentColor" />
+        <circle cx="8" cy="17" r="1.4" fill="currentColor" />
+      </svg>
+      <span>System Board</span>
+    </a>
+    <div class="nav-links">
+      <a routerLink="/" routerLinkActive="is-active" #climbLink="routerLinkActive" [attr.aria-current]="climbLink.isActive ? 'page' : null" [routerLinkActiveOptions]="{ exact: true }" (click)="closeSettings()">Climb</a>
+      <a routerLink="/add-problem" routerLinkActive="is-active" #createLink="routerLinkActive" [attr.aria-current]="createLink.isActive ? 'page' : null" (click)="closeSettings()">Create</a>
     </div>
+    <button #settingsButton type="button" class="settings-toggle" aria-label="Board settings" aria-haspopup="dialog" [attr.aria-expanded]="isSettingsOpen" aria-controls="board-settings" (click)="toggleSettings()">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 7h16M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+        <circle cx="9" cy="7" r="3" fill="var(--sb-surface)" stroke="currentColor" stroke-width="1.7" />
+        <circle cx="15" cy="17" r="3" fill="var(--sb-surface)" stroke="currentColor" stroke-width="1.7" />
+      </svg>
+    </button>
   </nav>
+  <section #settingsPanel *ngIf="isSettingsOpen" id="board-settings" class="settings-panel" role="dialog" aria-labelledby="settings-title">
+    <div class="settings-heading">
+      <h2 id="settings-title">Board settings</h2>
+      <button type="button" class="settings-close" aria-label="Close settings" (click)="closeSettings(true)">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>
+      </button>
+    </div>
+    <label for="holdSetup">Hold setup</label>
+    <select #setupSelect class="custom-select" id="holdSetup" [ngModel]="holdSetup" (ngModelChange)="updateHoldSetup($event)" aria-describedby="setup-hint">
+      <option value="Sep2021">2021</option>
+      <option value="Nov2020">2020</option>
+      <option value="Art">Art</option>
+    </select>
+    <p id="setup-hint">Choose the holds on your board.</p>
+  </section>
 </header>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, OnChanges, SimpleChange, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Input, Output, SimpleChange, EventEmitter, ElementRef, ViewChild, HostBinding, ChangeDetectorRef } from '@angular/core';
 import { Problem, Route } from '../problem';
 import { LedsService } from '../services/leds.service';
 import { Color } from '../color';
@@ -17,10 +17,26 @@ class Cell {
   templateUrl: './problem.component.html',
   styleUrls: ['./problem.component.css']
 })
-export class ProblemComponent implements OnInit {
+export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() problem: Problem;
   @Input() readonly: boolean;
   @Input() artColor: Color;
+  @Input() showControls: boolean = true;
+  @Input() autoSend: boolean = true;
+  @Input() @HostBinding('class.fit-to-container') fitToContainer: boolean = false;
+  @ViewChild('boardStage', { static: true }) boardStage: ElementRef<HTMLDivElement>;
+  fittedWidth: number = 0;
+  fittedHeight: number = 0;
+  isSending: boolean = false;
+  lightingError: string = '';
+  lightingStatus: string = '';
+  lastSentLighting: boolean = null;
+  private sendVersion: number = 0;
+  private initialized: boolean = false;
+  private destroyed: boolean = false;
+  private resizeObserver: any;
+  private unsubscribeSetup: () => void;
+  private resizeBoard = () => this.updateBoardSize();
   isArt: boolean;
   isLighting: boolean = true;
   @Output() onProblemChanged: EventEmitter<Problem> = new EventEmitter<Problem>();
@@ -34,11 +50,12 @@ export class ProblemComponent implements OnInit {
   constructor(
     private eventAggregator: EventAggregatorService,
     private ledsService: LedsService,
-    private modeService: ModeService
+    private modeService: ModeService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.setup = modeService.getHoldSetup();
     this.isArt = this.setup === 'Art';
-    eventAggregator.subscribe('holdSetupChangedEvent', setup => {
+    this.unsubscribeSetup = eventAggregator.subscribe('holdSetupChangedEvent', setup => {
       this.updateSetup();
       this.endDrawing();
     }, this);
@@ -87,13 +104,40 @@ export class ProblemComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.problem) {
-      this.initialize();
+    if (!this.initialized) this.initialize();
+  }
+
+  ngAfterViewInit() {
+    const ResizeObserverClass = (window as any).ResizeObserver;
+    if (ResizeObserverClass) {
+      this.resizeObserver = new ResizeObserverClass(this.resizeBoard);
+      this.resizeObserver.observe(this.boardStage.nativeElement);
     }
+    window.addEventListener('resize', this.resizeBoard);
+    this.updateBoardSize();
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
+    this.endDrawing();
+    if (this.resizeObserver) this.resizeObserver.disconnect();
+    window.removeEventListener('resize', this.resizeBoard);
+    if (this.unsubscribeSetup) this.unsubscribeSetup();
+  }
+
+  updateBoardSize() {
+    if (!this.fitToContainer || !this.boardStage || this.destroyed) return;
+    // Layout dimensions exclude the viewer transform when a zoomed board resizes.
+    const stage = this.boardStage.nativeElement;
+    const width = Math.max(0, Math.min(stage.clientWidth, stage.clientHeight / 1.56));
+    if (Math.abs(width - this.fittedWidth) < .01) return;
+    this.fittedWidth = width;
+    this.fittedHeight = width * 1.56;
+    this.changeDetectorRef.detectChanges();
   }
 
   ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
-    if (changes['problem']) {
+    if (changes['problem'] || changes['autoSend'] || changes['readonly']) {
       this.initialize();
     }
   }
@@ -105,15 +149,13 @@ export class ProblemComponent implements OnInit {
   }
 
   initialize() {
+    this.initialized = true;
     this.updateSetup();
     if (!this.problem || !this.problem.route) {
       this.clearCells();
       return;
     }
 
-    if (this.isLighting) {
-      this.ledsService.showRoute(this.problem.route);
-    }
     this.updateCellsToMatchProblem();
   }
 
@@ -137,9 +179,7 @@ export class ProblemComponent implements OnInit {
       this.updateCells(index, 'RGB', '');
     }
 
-    if (this.isLighting) {
-      this.ledsService.showRoute(this.problem.route);
-    }
+    if (this.isLighting) this.sendLighting();
   }
 
   onHoldSelected(index: number) {
@@ -167,9 +207,7 @@ export class ProblemComponent implements OnInit {
       this.updateCells(index, 'START', '');
     }
 
-    if (this.isLighting) {
-      this.ledsService.showRoute(this.problem.route);
-    }
+    if (this.isLighting) this.sendLighting();
   }
 
   updateCells(index: number, holdType: string, color: string) {
@@ -228,7 +266,34 @@ export class ProblemComponent implements OnInit {
   }
 
   toggleLighting() {
-    this.isLighting = !this.isLighting;
+    if (!this.autoSend || this.readonly) return;
+    this.isLighting = this.lastSentLighting === null && !this.isSending ? true : !this.isLighting;
     localStorage.setItem('isLighting', this.isLighting ? 'true' : 'false');
+    this.sendLighting();
+  }
+
+  retryLighting() {
+    this.sendLighting();
+  }
+
+  private sendLighting() {
+    if (!this.autoSend || this.readonly || this.destroyed) return;
+    if (this.isLighting && (!this.problem || !this.problem.route)) return;
+    const version = ++this.sendVersion;
+    this.isSending = true;
+    this.lightingError = '';
+    this.lightingStatus = '';
+    const targetLighting = this.isLighting;
+    const route = targetLighting ? this.problem.route : new Route();
+    this.ledsService.showRoute(route).then(() => {
+      if (this.destroyed || version !== this.sendVersion) return;
+      this.isSending = false;
+      this.lastSentLighting = targetLighting;
+      this.lightingStatus = 'Request sent.';
+    }).catch(error => {
+      if (this.destroyed || version !== this.sendVersion) return;
+      this.isSending = false;
+      this.lightingError = error && error.message ? error.message : 'Unable to send the wall request. Try again.';
+    });
   }
 }
